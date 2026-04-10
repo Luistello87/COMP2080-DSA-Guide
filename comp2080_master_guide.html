@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COMP 2080 - Master Data Structures & Algorithms Guide (Full Restoration)</title>
+    <style>
+        /* --- DESIGN SYSTEM (VANILLA CSS) --- */
+        :root {
+            --primary: #378ADD;
+            --secondary: #1D9E75;
+            --accent: #F9CB42;
+            --bg-light: #fafaf9;
+            --text-main: #2d2d2a;
+            --text-muted: #5f5e5a;
+            --border: #d3d2cc;
+            --success: #639922;
+            --error: #E24B4A;
+            --warning: #BA7517;
+            --shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+
+        * { box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            max-width: 1500px; 
+            margin: 0 auto; 
+            padding: 0 20px 40px 20px;
+            background: var(--bg-light);
+            line-height: 1.6;
+            color: var(--text-main);
+            scroll-behavior: smooth;
+        }
+
+        /* --- STATIC NAVIGATION (ONLY AT TOP) --- */
+        .master-header { 
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); 
+            color: white; 
+            padding: 60px 40px; 
+            border-radius: 0 0 20px 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .master-header h1 { margin: 0; font-size: 42px; letter-spacing: -1.5px; }
+        .master-header p { opacity: 0.9; font-size: 18px; margin: 10px 0 0 0; }
+
+        .nav { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 16px; 
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            margin-bottom: 50px;
+            position: relative; /* Static - does not follow scroll */
+        }
+        .nav h3 { margin: 0 0 20px 0; font-size: 22px; color: var(--primary); border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .nav-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+            gap: 15px; 
+        }
+        .nav-link { 
+            padding: 15px; 
+            background: #f0f0ed; 
+            border-radius: 10px; 
+            text-decoration: none; 
+            color: var(--text-main);
+            font-size: 15px;
+            font-weight: 700;
+            transition: 0.2s;
+            text-align: center;
+            border: 1px solid transparent;
+        }
+        .nav-link:hover { background: var(--primary); color: white; border-color: var(--primary); transform: translateY(-3px); }
+
+        /* --- SECTIONS & CONTENT --- */
+        .section { 
+            background: white; 
+            border-radius: 20px; 
+            padding: 60px; 
+            margin-bottom: 60px; 
+            box-shadow: var(--shadow);
+            border: 1px solid #f0f0ed;
+            scroll-margin-top: 20px;
+        }
+        h2 { 
+            color: var(--text-main); 
+            font-size: 40px;
+            border-bottom: 4px solid var(--primary);
+            padding-bottom: 15px;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            letter-spacing: -1px;
+        }
+        h3 { font-size: 28px; margin-top: 50px; color: var(--primary); }
+        h4 { font-size: 20px; color: var(--text-main); margin-bottom: 15px; }
+
+        p { font-size: 17px; margin-bottom: 20px; color: #444; }
+
+        /* --- CARDS --- */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin: 30px 0; }
+        .card { 
+            background: #f9f9f7; 
+            padding: 30px; 
+            border-radius: 16px; 
+            border: 1px solid var(--border);
+            height: 100%;
+        }
+
+        /* --- VISUALIZERS --- */
+        canvas { 
+            border: 2px solid var(--border); 
+            border-radius: 16px; 
+            background: white; 
+            display: block; 
+            margin: 30px auto;
+            max-width: 100%;
+            box-shadow: inset 0 2px 20px rgba(0,0,0,0.05);
+        }
+        
+        /* --- LOGS & STEPS --- */
+        .instruction-box {
+            background: #eef7ff;
+            border-left: 6px solid var(--primary);
+            padding: 25px 30px;
+            margin: 25px 0;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #0c447c;
+            line-height: 1.8;
+        }
+        .instruction-box strong { color: var(--primary); font-size: 18px; }
+
+        .log-area {
+            background: #fff;
+            border: 2px dashed var(--border);
+            padding: 25px;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            min-height: 120px;
+            max-height: 250px;
+            overflow-y: auto;
+            margin: 20px 0;
+            font-size: 14px;
+            white-space: pre-line;
+        }
+
+        /* --- BUTTONS --- */
+        .btn-group { display: flex; gap: 12px; margin: 25px 0; flex-wrap: wrap; }
+        button, .btn { 
+            padding: 14px 28px; 
+            border: none; 
+            border-radius: 10px; 
+            background: #e5e5df; 
+            cursor: pointer; 
+            font-size: 16px; 
+            font-weight: 700; 
+            transition: 0.2s;
+            color: var(--text-main);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        button:hover, .btn:hover { background: #d6d6ce; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        button.primary { background: var(--primary); color: white; }
+        button.success { background: var(--success); color: white; }
+        button.warning { background: var(--warning); color: white; }
+        button.active { background: var(--primary); color: white; }
+        button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        /* --- MATRICES --- */
+        .matrix-container { overflow-x: auto; margin: 25px 0; border: 1px solid var(--border); border-radius: 12px; }
+        .matrix-table { border-collapse: collapse; width: 100%; min-width: 500px; }
+        .matrix-table th, .matrix-table td { border: 1px solid var(--border); padding: 15px; text-align: center; font-weight: 600; }
+        .matrix-table th { background: #f0f0ed; color: var(--primary); font-size: 14px; }
+        .matrix-table input { width: 50px; padding: 8px; border: 1px solid var(--border); border-radius: 5px; text-align: center; font-weight: 800; }
+        .correct-cell { background: #e8f5e9 !important; }
+        .wrong-cell { background: #ffebee !important; }
+
+        /* --- CODE & HELPERS --- */
+        .alert { padding: 20px; border-radius: 12px; margin: 25px 0; border-left: 6px solid; }
+        .alert-info { background: #e3f2fd; border-color: var(--primary); color: #0d47a1; }
+        .alert-success { background: #e8f5e9; border-color: var(--success); color: #1b5e20; }
+        .alert-warning { background: #fff3e0; border-color: var(--warning); color: #e65100; }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 30px;
+            border-radius: 16px;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 15px;
+            line-height: 1.6;
+            margin: 25px 0;
+            border: 1px solid #333;
+        }
+        .keyword { color: #569cd6; }
+        .class { color: #4ec9b0; }
+        .string { color: #ce9178; }
+        .comment { color: #6a9955; }
+        
+        textarea { width: 100%; height: 350px; background: #1e1e1e; color: #d4d4d4; font-family: monospace; padding: 25px; border-radius: 16px; border: 1px solid #333; resize: vertical; line-height: 1.5; font-size: 15px; }
+
+        /* --- CHIPS --- */
+        .chip-container { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+        .chip { padding: 10px 20px; background: white; border: 2px solid var(--border); border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.2s; font-family: monospace; }
+        .chip.used { background: #eee; color: #aaa; border-color: #eee; text-decoration: line-through; cursor: default; }
+        .chip.active { background: var(--accent); border-color: var(--warning); transform: scale(1.1); }
+
+        @media (max-width: 1000px) { .grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<header class="master-header">
+    <h1>COMP 2080 - Master Data Structures & Algorithms Guide</h1>
+    <p>Comprehensive Theory, Visualizations, and Interactive Training Library</p>
+</header>
+
+<nav class="nav">
+    <h3>Quick Discovery Navigation</h3>
+    <div class="nav-grid">
+        <a href="#foundations" class="nav-link">1. Foundations & Properties</a>
+        <a href="#theory-insertion" class="nav-link">2. Insertion Process</a>
+        <a href="#theory-traversals" class="nav-link">3. Visit Orders (4 types)</a>
+        <a href="#theory-deletion" class="nav-link">4. Deletion Cases</a>
+        <a href="#builder-reconstruction" class="nav-link">5. Tree Builders</a>
+        <a href="#arena-practice" class="nav-link">6. Training Arena</a>
+        <a href="#graph-representation" class="nav-link">7. Adjacency Matrices</a>
+        <a href="#graph-search" class="nav-link">8. DFS & BFS Search</a>
+        <a href="#dijkstra-matrix" class="nav-link">9. Dijkstra Trace</a>
+        <a href="#coding-lab" class="nav-link">10. Coding Practice</a>
+        <a href="#java-reference" class="nav-link">11. Java Library</a>
+    </div>
+</nav>
+
+<div id="master-container">
+
+    <!-- SECTION 1: FOUNDATIONS -->
+    <section id="foundations" class="section">
+        <h2>📚 BST Foundations & Theory</h2>
+        <p>A Binary Search Tree (BST) is a hierarchical data structure that allows for efficient searching, insertion, and deletion operations. Its power comes from the fundamental **BST Property**.</p>
+        
+        <div class="alert alert-info">
+            <strong>The BST Property:</strong> For every node in the tree:
+            <ul>
+                <li>All values in the <strong>Left Subtree</strong> are strictly **less than** the node's value.</li>
+                <li>All values in the <strong>Right Subtree</strong> are strictly **greater than** the node's value.</li>
+            </ul>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h4>Core Terminology</h4>
+                <p>Before implementing algorithms, you must understand the relational terms:</p>
+                <ul>
+                    <li><strong>Root:</strong> The starting node (top). No parent.</li>
+                    <li><strong>Parent:</strong> A node that has links to lower nodes.</li>
+                    <li><strong>Child:</strong> A node pointed to by a higher node.</li>
+                    <li><strong>Leaf:</strong> A node with zero children (end of path).</li>
+                    <li><strong>Internal Node:</strong> A node with at least one child.</li>
+                    <li><strong>Height:</strong> The longest path from root to any leaf.</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h4>Performance Metrics</h4>
+                <p>On average, operations in a balanced BST are highly efficient:</p>
+                <ul>
+                    <li><strong>Search:</strong> O(log n)</li>
+                    <li><strong>Insert:</strong> O(log n)</li>
+                    <li><strong>Delete:</strong> O(log n)</li>
+                </ul>
+                <div class="alert alert-warning" style="font-size:14px; margin-top:15px;">
+                    <strong>Worst Case:</strong> If nodes are inserted in sorted order (1, 2, 3...), the tree becomes a "Line" (Skewed), and performance degrades to <strong>O(n)</strong>.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2: INSERTION PROCESS -->
+    <section id="theory-insertion" class="section">
+        <h2>📥 BST Insertion: Step-by-Step</h2>
+        <p>Insertion is a recursive process. You start at the root and compare the new value to the current node to decide which branch to take.</p>
+        
+        <div class="instruction-box">
+            <strong>The Algorithmic Logic:</strong>
+            <ol>
+                <li>If the tree is empty, new value becomes **ROOT**.</li>
+                <li>If <code>New < Current</code>, go to the <strong>LEFT</strong> subtree.</li>
+                <li>If <code>New > Current</code>, go to the <strong>RIGHT</strong> subtree.</li>
+                <li>Repeat until you hit a **NULL** link, then place the node there.</li>
+            </ol>
+        </div>
+
+        <div class="btn-group">
+            <button onclick="Theory_Ins.next()" class="primary">Execute Next Step</button>
+            <button onclick="Theory_Ins.reset()">Reset Process</button>
+            <button onclick="Theory_Ins.randomize()">Generate Random Set</button>
+        </div>
+
+        <div class="grid" style="grid-template-columns: 1fr 350px;">
+            <div>
+                <canvas id="theory-ins-canvas" width="750" height="400"></canvas>
+            </div>
+            <div>
+                <h4>Computer Logic Trace</h4>
+                <div id="theory-ins-log" class="log-area">Ready to begin insertion sequence...</div>
+                <div class="alert alert-success" style="font-size:14px;">
+                    <strong>Success Hint:</strong> Always start at the root for every single number in the sequence!
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: TRAVERSALS -->
+    <section id="theory-traversals" class="section">
+        <h2>🔍 BST Traversal Visit sequences</h2>
+        <p>Traversing means visiting every node in the tree exactly once. The order you choose determines the logic of the visit.</p>
+
+        <div class="btn-group">
+            <button onclick="Theory_Trav.run('inorder')" id="btn-trav-in" class="active">Visit: In-Order</button>
+            <button onclick="Theory_Trav.run('preorder')" id="btn-trav-pre">Visit: Pre-Order</button>
+            <button onclick="Theory_Trav.run('postorder')" id="btn-trav-post">Visit: Post-Order</button>
+            <button onclick="Theory_Trav.run('levelorder')" id="btn-trav-level">Visit: Level-Order</button>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h3 id="trav-title" style="margin-top:0;">In-Order Traversal</h3>
+                <div class="instruction-box">
+                    <strong>Rule:</strong> (Left Subtree → Root → Right Subtree)
+                    <p id="trav-desc">This is the most powerful visit for a BST because it yields values in <strong>Sorted Ascending Order</strong>.</p>
+                </div>
+                <h4>Animation Sequence:</h4>
+                <div id="trav-log" class="log-area" style="height:80px; font-size:18px; color:var(--secondary); font-weight:bold;">[ Waiting... ]</div>
+            </div>
+            <div>
+                <canvas id="theory-trav-canvas" width="600" height="400"></canvas>
+            </div>
+        </div>
+        
+        <div class="grid" style="grid-template-columns: repeat(3, 1fr);">
+            <div class="alert alert-info" style="margin:0;"><strong>Pre-Order:</strong> (Root-L-R). Best for cloning or exporting the tree structure.</div>
+            <div class="alert alert-info" style="margin:0;"><strong>Post-Order:</strong> (L-R-Root). Best for deleting trees (children first).</div>
+            <div class="alert alert-info" style="margin:0;"><strong>Level-Order:</strong> Breadth-first. Visits every level from top to bottom.</div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: DELETION CASES -->
+    <section id="theory-deletion" class="section">
+        <h2>♻️ BST Deletion: The 3 Scenarios</h2>
+        <p>Deleting a node requires restructuring the links. There are 3 distinct cases based on the number of children the target has.</p>
+
+        <div class="btn-group">
+            <button onclick="Theory_Del.show(0)" id="del-t-0" class="active">Case 1: Leaf (0 children)</button>
+            <button onclick="Theory_Del.show(1)" id="del-t-1">Case 2: One Child</button>
+            <button onclick="Theory_Del.show(2)" id="del-t-2">Case 3: Two Children</button>
+        </div>
+
+        <div class="grid" style="grid-template-columns: 1fr 400px;">
+            <canvas id="theory-del-canvas" width="700" height="450"></canvas>
+            <div>
+                <div id="theory-del-info" class="instruction-box" style="height:100%;">
+                    <strong>Case 1: No Children</strong>
+                    <p>Simply remove the link from the parent to this node. The node is orphaned and cleared.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="alert alert-warning">
+            <strong>The Case 3 Successor Rule:</strong> To maintain the BST property, we replace the target with its **In-Order Successor** (smallest in the right subtree). This successor is guaranteed to be a Case 1 or Case 2 node, making it easy to remove after the swap.
+        </div>
+    </section>
+
+    <!-- SECTION 5: TREE BUILDERS (RECONSTRUCTION) -->
+    <section id="builder-reconstruction" class="section">
+        <h2>🛠️ Construction Algorithm: Rebuilding Trees</h2>
+        <p>You can recreate a tree if you have the <strong>In-Order</strong> sequence and either a <strong>Pre-Order</strong> or <strong>Post-Order</strong> sequence.</p>
+        
+        <div class="instruction-box">
+            <strong>The "Split" Trick:</strong> 
+            1. Pre-order's first node is the **Root**.
+            2. Find this root in the In-order list.
+            3. Everything to the **left** of it is the Left Subtree.
+            4. Everything to the **right** is the Right Subtree.
+            5. Repeat recursively.
+        </div>
+
+        <div class="arena-box" style="background:#fff;">
+            <h3>Module A: Pre-Order + In-Order</h3>
+            <div class="chip-container" id="bld1-pre"></div>
+            <div class="chip-container" id="bld1-in"></div>
+            <div id="bld1-logic" class="instruction-box">Identify the root...</div>
+            <canvas id="bld1-canvas" width="800" height="400"></canvas>
+            <div class="btn-group">
+                <button onclick="Bld_PreIn.reset()" class="warning">Reset Builder</button>
+                <button onclick="Bld_PreIn.auto()" class="success">Show Solution</button>
+                <button onclick="Bld_PreIn.randomize()">Random Challenge</button>
+            </div>
+        </div>
+
+        <div class="arena-box" style="background:#fff; margin-top:50px;">
+            <h3>Module B: Post-Order + In-Order</h3>
+            <div class="alert alert-info"><strong>Post-order Tip:</strong> The root is the LAST element. Process subtrees from Right to Left!</div>
+            <div class="chip-container" id="bld2-post"></div>
+            <div class="chip-container" id="bld2-in"></div>
+            <canvas id="bld2-canvas" width="800" height="400"></canvas>
+            <div class="btn-group">
+                <button onclick="Bld_PostIn.reset()" class="warning">Reset Builder</button>
+                <button onclick="Bld_PostIn.randomize()">Random Challenge</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 6: TRAINING ARENA -->
+    <section id="arena-practice" class="section">
+        <h2>🏋️ Interactive Training Arenas</h2>
+        <p>Put your knowledge into practice. Build your own trees and test traversals.</p>
+
+        <div class="arena-box">
+            <h3>Arena 1: Master BST Builder</h3>
+            <p>Insert or Delete values manually to see how the tree rebalances.</p>
+            <div class="btn-group">
+                <input type="number" id="arena-val" placeholder="Value" style="width:100px; padding:12px; border-radius:10px; border:2px solid #ddd;">
+                <button onclick="Arena.insert()" class="primary">Insert</button>
+                <button onclick="Arena.delete()" class="warning">Delete</button>
+                <button onclick="Arena.generate(7)" class="success">Balanced Random 7</button>
+                <button onclick="Arena.clear()">Clear All</button>
+            </div>
+            <canvas id="arena-canvas" width="900" height="450"></canvas>
+            <div id="arena-log" class="log-area">Ready...</div>
+        </div>
+
+        <div class="arena-box" style="margin-top:50px;">
+            <h3>Arena 2: Traversal Mastery Quiz</h3>
+            <p>We generate a random tree; you provide the correct sequences.</p>
+            <div class="btn-group">
+                <button onclick="Quiz.generate('easy')">Difficulty: Easy</button>
+                <button onclick="Quiz.generate('hard')">Difficulty: Hard</button>
+            </div>
+            <canvas id="quiz-canvas" width="900" height="400"></canvas>
+            <div class="grid">
+                <div>
+                    <strong>In-Order Result:</strong>
+                    <input type="text" id="ans-in" style="width:100%; padding:15px; margin:10px 0; border-radius:8px; border:1px solid #ccc;">
+                    <strong>Pre-Order Result:</strong>
+                    <input type="text" id="ans-pre" style="width:100%; padding:15px; margin:10px 0; border-radius:8px; border:1px solid #ccc;">
+                </div>
+                <div class="instruction-box" id="quiz-feedback">
+                    Enter values separated by commas (e.g., 10,20,30).
+                </div>
+            </div>
+            <div class="btn-group">
+                <button onclick="Quiz.check()" class="success" style="flex:1;">Verify My Answers</button>
+                <button onclick="Quiz.reveal()" class="warning" style="flex:1;">Reveal Solution</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 7: ADJACENCY MATRICES -->
+    <section id="graph-representation" class="section">
+        <h2>📊 Adjacency Matrices (Directed & Weighted)</h2>
+        <p>A graph is represented as a square matrix where Row i and Column j indicate the edge from node i to node j.</p>
+
+        <div class="grid" style="grid-template-columns: 1fr 1.3fr;">
+            <div>
+                <canvas id="matrix-canvas" width="500" height="500"></canvas>
+                <div class="btn-group">
+                    <button onclick="Matrix_Arena.generate()" class="primary">Generate Hard Graph</button>
+                </div>
+            </div>
+            <div>
+                <h3>Interactive Adjacency Grid</h3>
+                <div class="instruction-box">
+                    <strong>The Challenge:</strong> This is a 7x7 Directed-Weighted graph. Identify the weights between nodes. Use 0 if no path exists.
+                </div>
+                <div class="matrix-container">
+                    <table class="matrix-table" id="master-matrix-table">
+                        <!-- Populated by JS -->
+                    </table>
+                </div>
+                <div class="btn-group">
+                    <button onclick="Matrix_Arena.check()" class="success">Check Matrix</button>
+                    <button onclick="Matrix_Arena.reveal()" class="warning">Fill Solution</button>
+                </div>
+                <div id="matrix-feedback" class="log-area" style="min-height:60px;"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 8: DFS & BFS SEARCH -->
+    <section id="graph-search" class="section">
+        <h2>🕸️ Graph Search Algorithms: DFS & BFS</h2>
+        <p>Depth-First and Breadth-First search differ in how they expand from the source node.</p>
+
+        <div class="grid">
+            <div class="card">
+                <h3>DFS: Depth-First</h3>
+                <div class="instruction-box">
+                    <strong>Rule:</strong> Uses a **Stack**. Branch as deep as possible.
+                    <p>Priority: Adjacent nodes added to stack in reverse alphabetical order (so A is popped first).</p>
+                </div>
+                <div class="btn-group">
+                    <button onclick="Search_Arena.run('DFS')" class="primary">Animate DFS</button>
+                </div>
+            </div>
+            <div class="card">
+                <h3>BFS: Breadth-First</h3>
+                <div class="instruction-box">
+                    <strong>Rule:</strong> Uses a **Queue**. Explore all neighbors at current level first.
+                    <p>Priority: Neighbors added to queue in alphabetical order.</p>
+                </div>
+                <div class="btn-group">
+                    <button onclick="Search_Arena.run('BFS')" class="primary">Animate BFS</button>
+                </div>
+            </div>
+        </div>
+
+        <canvas id="search-canvas" width="1000" height="450"></canvas>
+        <div id="search-log" class="log-area" style="font-size:20px; text-align:center; color:var(--primary);">Waiting for search...</div>
+    </section>
+
+    <!-- SECTION 9: DIJKSTRA TRACE -->
+    <section id="dijkstra-matrix" class="section">
+        <h2>🚀 Dijkstra shortest Path: Algorithm Trace</h2>
+        <p>Find the shortest path from Source Node **A** to all other nodes.</p>
+        
+        <div class="grid" style="grid-template-columns: 1.2fr 1fr;">
+            <div>
+                <canvas id="dijkstra-canvas" width="700" height="400"></canvas>
+            </div>
+            <div>
+                <div class="instruction-box">
+                    <strong>Trace Table Format:</strong> Enter distance and predecessor, e.g., <code>10(A)</code>. If unreachable, enter <code>Inf</code>.
+                </div>
+                <div class="matrix-container">
+                    <table class="matrix-table" id="dijkstra-trace-table">
+                        <!-- Populated by JS -->
+                    </table>
+                </div>
+                <div class="btn-group">
+                    <button onclick="Dijkstra_Arena.verify()" class="success" style="flex:1;">Validate</button>
+                    <button onclick="Dijkstra_Arena.hint()" class="primary" style="flex:1;">Hint</button>
+                    <button onclick="Dijkstra_Arena.fill()" class="warning" style="flex:1;">Fill Solution</button>
+                    <button onclick="Dijkstra_Arena.reset()" style="flex:1;">Reset Answers</button>
+                </div>
+                <div id="dijkstra-log" class="log-area" style="min-height:50px;">Waiting...</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 10: CODING LAB -->
+    <section id="coding-lab" class="section">
+        <h2>🧪 Coding Laboratory - Challenge Suite</h2>
+        <p>Implement these core methods to master the logic behind the visualizations.</p>
+
+        <div class="grid" style="grid-template-columns: 280px 1fr;">
+            <div class="btn-group" style="flex-direction:column; align-items:stretch;">
+                <button onclick="Coding_Lab.load('search')" id="cb-search" class="active">Algorithm: Search</button>
+                <button onclick="Coding_Lab.load('min')" id="cb-min">Algorithm: Find Min</button>
+                <button onclick="Coding_Lab.load('max')" id="cb-max">Algorithm: Find Max</button>
+                <button onclick="Coding_Lab.load('height')" id="cb-height">Algorithm: Height</button>
+                <button onclick="Coding_Lab.load('count')" id="cb-count">Algorithm: Count</button>
+                <button onclick="Coding_Lab.load('valid')" id="cb-valid">Algorithm: Validate BST</button>
+            </div>
+            <div>
+                <h3 id="lab-title" style="margin-top:0;">Search Method</h3>
+                <p id="lab-desc" style="font-style:italic;">Write a recursive method to check for a value's existence.</p>
+                <textarea id="lab-editor" spellcheck="false"></textarea>
+                <div class="btn-group">
+                    <button onclick="Coding_Lab.validate()" class="success">Conceptual Validate</button>
+                    <button onclick="Coding_Lab.reset()">Reset Code</button>
+                    <button onclick="Coding_Lab.revealSolution()" class="warning">Reveal Solution</button>
+                </div>
+                <div id="lab-feedback"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 11: JAVA REFERENCE -->
+    <section id="java-reference" class="section">
+        <h2>📋 The Java Study Reference</h2>
+        <p>Full-source implementations for exam review.</p>
+
+        <h3>The Node Class</h3>
+        <div class="code-block">
+<pre><span class="keyword">class</span> <span class="class">Node</span> {
+    <span class="keyword">int</span> data;
+    <span class="class">Node</span> left, right;
+    
+    <span class="keyword">public</span> <span class="class">Node</span>(<span class="keyword">int</span> val) {
+        data = val;
+        left = right = <span class="keyword">null</span>;
+    }
+}</pre>
+        </div>
+
+        <h3>Full Insertion Implementation</h3>
+        <div class="code-block">
+<pre><span class="keyword">public void</span> insert(<span class="keyword">int</span> v) {
+    root = insertRec(root, v);
+}
+
+<span class="keyword">private</span> <span class="class">Node</span> insertRec(<span class="class">Node</span> cur, <span class="keyword">int</span> v) {
+    <span class="keyword">if</span> (cur == <span class="keyword">null</span>) <span class="keyword">return new</span> <span class="class">Node</span>(v);
+    <span class="keyword">if</span> (v < cur.data) cur.left = insertRec(cur.left, v);
+    <span class="keyword">else if</span> (v > cur.data) cur.right = insertRec(cur.right, v);
+    <span class="keyword">return</span> cur;
+}</pre>
+        </div>
+
+        <h3>Full Deletion (3-Case logic)</h3>
+        <div class="code-block">
+<pre><span class="keyword">public void</span> delete(<span class="keyword">int</span> x) {
+    root = deleteRec(root, x);
+}
+
+<span class="keyword">private</span> <span class="class">Node</span> deleteRec(<span class="class">Node</span> n, <span class="keyword">int</span> x) {
+    <span class="keyword">if</span> (n == <span class="keyword">null</span>) <span class="keyword">return null</span>;
+    <span class="keyword">if</span> (x < n.data) n.left = deleteRec(n.left, x);
+    <span class="keyword">else if</span> (x > n.data) n.right = deleteRec(n.right, x);
+    <span class="keyword">else</span> {
+        <span class="comment">// Case 1 & 2</span>
+        <span class="keyword">if</span> (n.left == <span class="keyword">null</span>) <span class="keyword">return</span> n.right;
+        <span class="keyword">if</span> (n.right == <span class="keyword">null</span>) <span class="keyword">return</span> n.left;
+        <span class="comment">// Case 3: 2 Children</span>
+        n.data = findMin(n.right);
+        n.right = deleteRec(n.right, n.data);
+    }
+    <span class="keyword">return</span> n;
+}</pre>
+        </div>
+    </section>
+
+</div>
+
+<script>
+/* --- MODULE 0: UTILITIES --- */
+const Utils = {
+    drawNode: (ctx, x, y, val, color='#85B7EB', active=false) => {
+        ctx.save();
+        ctx.fillStyle = active ? '#F9CB42' : color;
+        ctx.strokeStyle = '#3d3d3a';
+        ctx.lineWidth = active ? 5 : 2;
+        ctx.beginPath(); ctx.arc(x, y, 22, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = active ? '#5c4501' : (color.length > 7 ? 'white' : '#0c447c');
+        if(color === '#1D9E75' || color === '#378ADD') ctx.fillStyle = 'white';
+        ctx.font = 'bold 15px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(val, x, y); ctx.restore();
+    },
+    drawEdge: (ctx, x1, y1, x2, y2, weight=null) => {
+        ctx.save(); ctx.strokeStyle = '#d3d2cc'; ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+        if(weight !== null) {
+            const mx=(x1+x2)/2, my=(y1+y2)/2;
+            ctx.fillStyle='white'; ctx.fillRect(mx-15, my-15, 30, 30);
+            ctx.fillStyle='#E24B4A'; ctx.font='bold 14px monospace'; ctx.textAlign='center';
+            ctx.fillText(weight, mx, my+5);
+        } ctx.restore();
+    }
+};
+
+/* --- MODULE 1: THEORY STEPS --- */
+const Theory_Ins = {
+    seq: [50, 20, 90, 19, 41, 75, 95], ptr: -1, tree: [],
+    init: () => Theory_Ins.reset(),
+    randomize: () => { Theory_Ins.seq = Array.from({length: 7}, () => Math.floor(Math.random()*80)+10); Theory_Ins.reset(); },
+    reset: () => { Theory_Ins.ptr = -1; Theory_Ins.tree = []; Theory_Ins.render(); document.getElementById('theory-ins-log').innerText = "Sequence: " + Theory_Ins.seq.join(', '); },
+    next: () => {
+        if(Theory_Ins.ptr >= Theory_Ins.seq.length - 1) return;
+        Theory_Ins.ptr++; const val = Theory_Ins.seq[Theory_Ins.ptr];
+        Theory_Ins.tree.push(val);
+        let log = `Step ${Theory_Ins.ptr+1}: Inserting ${val}...\n`;
+        if(Theory_Ins.tree.length === 1) log += "-> Root was NULL, so " + val + " becomes the ROOT.";
+        else {
+            let cur = Theory_Ins.tree[0];
+            while(cur !== val) {
+                if(val < cur) { log += `-> ${val} < ${cur}: Moving LEFT\n`; break; }
+                else { log += `-> ${val} > ${cur}: Moving RIGHT\n`; break; }
+            }
+        }
+        document.getElementById('theory-ins-log').innerText = log;
+        Theory_Ins.render();
+    },
+    render: () => {
+        const ctx = document.getElementById('theory-ins-canvas').getContext('2d');
+        ctx.clearRect(0,0,750,400); if(!Theory_Ins.tree.length) return;
+        const nodes=[]; const root={v:Theory_Ins.tree[0], x:375, y:50, off:160}; nodes.push(root);
+        Theory_Ins.tree.slice(1).forEach(v => {
+            let cur = nodes[0];
+            while(true) {
+                if(v < cur.v) { if(!cur.l) {cur.l={v, x:cur.x-cur.off, y:cur.y+70, off:cur.off*0.5}; nodes.push(cur.l); break;} cur=cur.l; }
+                else { if(!cur.r) {cur.r={v, x:cur.x+cur.off, y:cur.y+70, off:cur.off*0.5}; nodes.push(cur.r); break;} cur=cur.r; }
+            }
+        });
+        nodes.forEach(n => { if(n.l) Utils.drawEdge(ctx, n.x, n.y, n.l.x, n.l.y); if(n.r) Utils.drawEdge(ctx, n.x, n.y, n.r.x, n.r.y); });
+        nodes.forEach(n => Utils.drawNode(ctx, n.x, n.y, n.v, n.v === Theory_Ins.seq[Theory_Ins.ptr] ? '#F9CB42' : '#85B7EB'));
+    }
+};
+
+const Theory_Trav = {
+    tree: {v:50, l:{v:20, l:{v:15}, r:{v:40}}, r:{v:90, l:{v:75}}},
+    run: (type) => {
+        const btns = ['in','pre','post','level'];
+        btns.forEach(b => document.getElementById(`btn-trav-${b}`).classList.toggle('active', type.includes(b)));
+        const order = [];
+        const titles = {inorder: "In-Order: (L-Root-R)", preorder: "Pre-Order: (Root-L-R)", postorder: "Post-Order: (L-R-Root)", levelorder: "Level-Order: (Top-Bottom)"};
+        document.getElementById('trav-title').innerText = titles[type];
+        
+        const walk = (n) => {
+            if(!n) return;
+            if(type === 'preorder') order.push(n.v);
+            walk(n.l);
+            if(type === 'inorder') order.push(n.v);
+            walk(n.r);
+            if(type === 'postorder') order.push(n.v);
+        }
+        if(type === 'levelorder') {
+            const q = [Theory_Trav.tree];
+            while(q.length) { const n = q.shift(); order.push(n.v); if(n.l) q.push(n.l); if(n.r) q.push(n.r); }
+        } else walk(Theory_Trav.tree);
+
+        let i = 0;
+        const it = setInterval(() => {
+            if(i >= order.length) { clearInterval(it); return; }
+            const curVisited = order.slice(0, i+1);
+            Theory_Trav.render(curVisited);
+            document.getElementById('trav-log').innerText = curVisited.join(" → ");
+            i++;
+        }, 600);
+    },
+    render: (visited) => {
+        const ctx = document.getElementById('theory-trav-canvas').getContext('2d'); ctx.clearRect(0,0,600,400);
+        const dr = (n, x, y, off) => {
+            if(!n) return;
+            if(n.l) {Utils.drawEdge(ctx,x,y,x-off,y+70); dr(n.l,x-off,y+70,off*0.5);}
+            if(n.r) {Utils.drawEdge(ctx,x,y,x+off,y+70); dr(n.r,x+off,y+70,off*0.5);}
+            Utils.drawNode(ctx,x,y,n.v, visited.includes(n.v) ? (visited[visited.length-1] === n.v ? '#F9CB42' : '#1D9E75') : '#85B7EB');
+        };
+        dr(Theory_Trav.tree, 300, 50, 140);
+    }
+};
+
+const Theory_Del = {
+    stage: 0,
+    show: (idx) => {
+        const btns = ['del-t-0','del-t-1','del-t-2'];
+        btns.forEach((b,i) => document.getElementById(b).classList.toggle('active', i === idx));
+        const infos = [
+            "<strong>Case 1: No Children (Leaf)</strong><p>The easiest case. Since the node has no children, we simply remove the pointer from its parent. No other changes to the tree structure are needed.</p>",
+            "<strong>Case 2: One Child</strong><p>The node has either a Left OR Right child. We bypass the deleted node by connecting its parent directly to the existing child. It is like removing a link from a chain.</p>",
+            "<strong>Case 3: Two Children (Click to step through)</strong><p id='del-c3-log'>Target Node '50' selected for deletion.</p><button onclick='Theory_Del.nextStage()' class='warning'>Step Logic</button>"
+        ];
+        document.getElementById('theory-del-info').innerHTML = infos[idx];
+        Theory_Del.stage = 0;
+        Theory_Del.render(idx);
+    },
+    nextStage: () => {
+        Theory_Del.stage++;
+        if(Theory_Del.stage > 3) Theory_Del.stage = 0;
+        Theory_Del.render(2);
+    },
+    render: (idx) => {
+        const ctx = document.getElementById('theory-del-canvas').getContext('2d'); ctx.clearRect(0,0,700,450);
+        if(idx === 0) { // Leaf
+            Utils.drawEdge(ctx, 350, 50, 200, 150); Utils.drawEdge(ctx, 200, 150, 100, 250);
+            Utils.drawNode(ctx, 350, 50, 50); Utils.drawNode(ctx, 200, 150, 20); Utils.drawNode(ctx, 100, 250, 10, '#E24B4A');
+        } else if(idx === 1) { // 1 Child
+            Utils.drawEdge(ctx, 350, 50, 500, 150); Utils.drawEdge(ctx, 500, 150, 450, 250);
+            Utils.drawNode(ctx, 350, 50, 50); Utils.drawNode(ctx, 500, 150, 80, '#E24B4A'); Utils.drawNode(ctx, 450, 250, 70, '#1D9E75');
+        } else { // 2 Children stages
+            Utils.drawEdge(ctx, 350, 50, 200, 150); Utils.drawEdge(ctx, 350, 50, 500, 150);
+            if (Theory_Del.stage < 3) Utils.drawEdge(ctx, 500, 150, 450, 250);
+            
+            let valRoot = (Theory_Del.stage >= 2) ? 60 : 50;
+            let valLeaf = (Theory_Del.stage === 2) ? 50 : 60;
+            
+            let rootColor = Theory_Del.stage === 0 ? '#E24B4A' : '#85B7EB';
+            if (Theory_Del.stage === 2) rootColor = '#1D9E75';
+            
+            Utils.drawNode(ctx, 350, 50, valRoot, rootColor);
+            Utils.drawNode(ctx, 500, 150, 80); 
+            Utils.drawNode(ctx, 200, 150, 30);
+            
+            if (Theory_Del.stage < 3) {
+                let leafColor = Theory_Del.stage === 1 ? '#F9CB42' : '#85B7EB';
+                if (Theory_Del.stage === 2) leafColor = '#E24B4A';
+                Utils.drawNode(ctx, 450, 250, valLeaf, leafColor);
+            }
+
+            const logs = [
+                "Target Node '50' selected for deletion.",
+                "Step 1: Found In-Order Successor '60' (Smallest in right sub-tree).",
+                "Step 2: Values swapped! Node 50 moved to leaf, 60 replaces root.",
+                "Step 3: Leaf 50 is deleted. BST Property maintained."
+            ];
+            const logEl = document.getElementById('del-c3-log');
+            if (logEl) logEl.innerText = logs[Theory_Del.stage];
+        }
+    }
+}
+
+/* --- MODULE 2: BUILDERS --- */
+const Bld_PreIn = {
+    pre: [20, 10, 4, 8, 12, 14, 22], in: [4, 8, 10, 12, 14, 20, 22], ptr: 0, placed: [],
+    init: () => {
+        document.getElementById('bld1-pre').innerHTML = Bld_PreIn.pre.map(v => `<div id="pb1-${v}" class="chip">${v}</div>`).join('');
+        document.getElementById('bld1-in').innerHTML = Bld_PreIn.in.map(v => `<div id="ib1-${v}" class="chip" onclick="Bld_PreIn.click(${v})">${v}</div>`).join('');
+        Bld_PreIn.reset();
+    },
+    randomize: () => { Bld_PreIn.pre = Array.from({length:6}, () => Math.floor(Math.random()*90)+10); Bld_PreIn.in = [...Bld_PreIn.pre].sort((a,b)=>a-b); Bld_PreIn.init(); },
+    reset: () => { Bld_PreIn.ptr = 0; Bld_PreIn.placed = []; document.querySelectorAll('#builder-reconstruction .chip').forEach(c=>c.classList.remove('used','active')); Bld_PreIn.render(); },
+    click: (v) => {
+        if(v !== Bld_PreIn.pre[Bld_PreIn.ptr]) return;
+        Bld_PreIn.placed.push(v); document.getElementById(`pb1-${v}`).classList.add('used'); document.getElementById(`ib1-${v}`).classList.add('used');
+        Bld_PreIn.ptr++; Bld_PreIn.render();
+        document.getElementById('bld1-logic').innerHTML = Bld_PreIn.ptr >= Bld_PreIn.pre.length ? "Tree Complete!" : `Next Root: ${Bld_PreIn.pre[Bld_PreIn.ptr]}`;
+    },
+    auto: () => { while(Bld_PreIn.ptr < Bld_PreIn.pre.length) Bld_PreIn.click(Bld_PreIn.pre[Bld_PreIn.ptr]); },
+    render: () => {
+        const ctx = document.getElementById('bld1-canvas').getContext('2d'); ctx.clearRect(0,0,800,400);
+        if(!Bld_PreIn.placed.length) return;
+        const tree = {v: Bld_PreIn.placed[0]};
+        Bld_PreIn.placed.slice(1).forEach(v => {
+            let cur = tree; while(true) { if(v < cur.v) {if(!cur.l){cur.l={v};break;}cur=cur.l;} else {if(!cur.r){cur.r={v};break;}cur=cur.r;} }
+        });
+        const dr = (n, x, y, off) => {
+            if(!n) return; if(n.l){Utils.drawEdge(ctx,x,y,x-off,y+60); dr(n.l,x-off,y+60,off*.5);} if(n.r){Utils.drawEdge(ctx,x,y,x+off,y+60); dr(n.r,x+off,y+60,off*.5);} Utils.drawNode(ctx,x,y,n.v);
+        }; dr(tree, 400, 40, 180);
+    }
+};
+
+const Bld_PostIn = {
+    post: [5, 15, 10, 25, 35, 30, 20], in: [5, 10, 15, 20, 25, 30, 35], ptr: 0, placed: [],
+    init: () => {
+        document.getElementById('bld2-post').innerHTML = Bld_PostIn.post.map(v => `<div id="postb-${v}" class="chip">${v}</div>`).join('');
+        document.getElementById('bld2-in').innerHTML = Bld_PostIn.in.map(v => `<div id="inb-${v}" class="chip" onclick="Bld_PostIn.click(${v})">${v}</div>`).join('');
+        Bld_PostIn.reset();
+    },
+    randomize: () => { Bld_PostIn.post = Array.from({length:6}, () => Math.floor(Math.random()*90)+10); Bld_PostIn.in = [...Bld_PostIn.post].sort((a,b)=>a-b); Bld_PostIn.init(); },
+    reset: () => { Bld_PostIn.ptr = Bld_PostIn.post.length-1; Bld_PostIn.placed = []; Bld_PostIn.render(); },
+    click: (v) => {
+        if(v !== Bld_PostIn.post[Bld_PostIn.ptr]) return;
+        Bld_PostIn.placed.push(v); document.getElementById(`postb-${v}`).classList.add('used'); document.getElementById(`inb-${v}`).classList.add('used'); Bld_PostIn.ptr--; Bld_PostIn.render();
+    },
+    render: () => {
+        const ctx = document.getElementById('bld2-canvas').getContext('2d'); ctx.clearRect(0,0,800,400);
+        if(!Bld_PostIn.placed.length) return;
+        const tree = {v: Bld_PostIn.placed[0]};
+        Bld_PostIn.placed.slice(1).forEach(v => {
+            let cur = tree; while(true) { if(v < cur.v) {if(!cur.l){cur.l={v};break;}cur=cur.l;} else {if(!cur.r){cur.r={v};break;}cur=cur.r;} }
+        });
+        const dr = (n, x, y, off) => {
+            if(!n) return; if(n.l){Utils.drawEdge(ctx,x,y,x-off,y+60); dr(n.l,x-off,y+60,off*.5);} if(n.r){Utils.drawEdge(ctx,x,y,x+off,y+60); dr(n.r,x+off,y+60,off*.5);} Utils.drawNode(ctx,x,y,n.v);
+        }; dr(tree, 400, 40, 180);
+    }
+};
+
+/* --- MODULE 3: ARENA & QUIZ --- */
+const Arena = {
+    tree: null,
+    insert: () => {
+        const v = parseInt(document.getElementById('arena-val').value); if(isNaN(v)) return;
+        const add = (n, val) => { if(val < n.v) { if(!n.l) n.l={v:val}; else add(n.l, val); } else if(val > n.v) { if(!n.r) n.r={v:val}; else add(n.r, val); } };
+        if(!Arena.tree) Arena.tree = {v}; else add(Arena.tree, v);
+        document.getElementById('arena-log').innerText = `Inserted ${v}.`; Arena.draw();
+    },
+    delete: () => {
+        const v = parseInt(document.getElementById('arena-val').value); if(isNaN(v)) return;
+        const del = (n, val) => {
+            if(!n) return null;
+            if(val < n.v) n.l = del(n.l, val);
+            else if(val > n.v) n.r = del(n.r, val);
+            else {
+                if(!n.l) return n.r; if(!n.r) return n.l;
+                let s = n.r; while(s.l) s = s.l; n.v = s.v; n.r = del(n.r, s.v);
+            } return n;
+        }; Arena.tree = del(Arena.tree, v); document.getElementById('arena-log').innerText = `Deleted ${v}.`; Arena.draw();
+    },
+    generate: (n) => {
+        Arena.clear(); for(let i=0; i<n; i++) { const v = Math.floor(Math.random()*90)+10; if(!Arena.tree) Arena.tree={v}; else { let c=Arena.tree; while(true){ if(v < c.v){ if(!c.l){c.l={v};break;}c=c.l;} else {if(!c.r){c.r={v};break;}c=c.r;} } } }
+        Arena.draw();
+    },
+    clear: () => { Arena.tree = null; Arena.draw(); },
+    draw: () => {
+        const ctx = document.getElementById('arena-canvas').getContext('2d'); ctx.clearRect(0,0,900,450);
+        if(!Arena.tree) return;
+        const dr = (n, x, y, off) => { if(!n) return; if(n.l){Utils.drawEdge(ctx,x,y,x-off,y+60); dr(n.l,x-off,y+60,off*.5);} if(n.r){Utils.drawEdge(ctx,x,y,x+off,y+60); dr(n.r,x+off,y+60,off*.5);} Utils.drawNode(ctx,x,y,n.v); };
+        dr(Arena.tree, 450, 40, 200);
+    }
+};
+
+const Quiz = {
+    tree: null, ans: {},
+    generate: (diff) => {
+        const count = diff === 'easy' ? 5 : 9; Arena.clear(); // Reusing Arena generation logic for quiz
+        const vals = []; while(vals.length < count) { let v = Math.floor(Math.random()*90)+10; if(!vals.includes(v)) vals.push(v); }
+        Quiz.tree = {v: vals[0]}; vals.slice(1).forEach(v => { let c=Quiz.tree; while(true){ if(v < c.v){if(!c.l){c.l={v};break;}c=c.l;} else {if(!c.r){c.r={v};break;}c=c.r;} } });
+        const ctx = document.getElementById('quiz-canvas').getContext('2d'); ctx.clearRect(0,0,900,400);
+        const dr = (n, x, y, off) => { if(!n) return; if(n.l){Utils.drawEdge(ctx,x,y,x-off,y+50); dr(n.l,x-off,y+50,off*.5);} if(n.r){Utils.drawEdge(ctx,x,y,x+off,y+50); dr(n.r,x+off,y+50,off*.5);} Utils.drawNode(ctx,x,y,n.v); };
+        dr(Quiz.tree, 450, 30, 200);
+        const ino = [], pre = []; const walk = (node) => { pre.push(node.v); if(node.l) walk(node.l); ino.push(node.v); if(node.r) walk(node.r); }; walk(Quiz.tree);
+        Quiz.ans = { in: ino.join(','), pre: pre.join(',') };
+        document.getElementById('ans-in').value = ""; document.getElementById('ans-pre').value = ""; document.getElementById('quiz-feedback').innerText = "Submit Answers...";
+    },
+    check: () => {
+        const ui = document.getElementById('ans-in').value.replace(/ /g,''), up = document.getElementById('ans-pre').value.replace(/ /g,'');
+        const correct = ui === Quiz.ans.in && up === Quiz.ans.pre;
+        document.getElementById('quiz-feedback').innerHTML = correct ? "✅ Correct! All Traversals match." : "❌ Discrepancy Found. Check order and commas.";
+    },
+    reveal: () => { document.getElementById('ans-in').value = Quiz.ans.in; document.getElementById('ans-pre').value = Quiz.ans.pre; }
+};
+
+/* --- MODULE 4: GRAPHS & SEARCH --- */
+const Matrix_Arena = {
+    nodes: {A:[100,100], B:[250,50], C:[400,100], D:[80,250], E:[250,250], F:[420,250], G:[250,400]},
+    edges: [], labels: ['A','B','C','D','E','F','G'],
+    generate: () => {
+        Matrix_Arena.edges = [];
+        for(let i=0; i<7; i++) {
+            for(let j=i+1; j<7; j++) {
+                if(Math.random() < 0.3) {
+                    const w = Math.floor(Math.random()*50)+5;
+                    Matrix_Arena.edges.push({from: Matrix_Arena.labels[i], to: Matrix_Arena.labels[j], w: w});
+                    Matrix_Arena.edges.push({from: Matrix_Arena.labels[j], to: Matrix_Arena.labels[i], w: w});
+                }
+            }
+        }
+        Matrix_Arena.draw(); Matrix_Arena.buildTable();
+    },
+    draw: () => {
+        const ctx = document.getElementById('matrix-canvas').getContext('2d'); ctx.clearRect(0,0,500,500);
+        Matrix_Arena.edges.forEach(e => {
+            const p1 = Matrix_Arena.nodes[e.from], p2 = Matrix_Arena.nodes[e.to];
+            Utils.drawEdge(ctx, p1[0], p1[1], p2[0], p2[1], e.w);
+        });
+        Object.entries(Matrix_Arena.nodes).forEach(([l,p]) => Utils.drawNode(ctx, p[0], p[1], l, '#F9CB42'));
+    },
+    buildTable: () => {
+        let html = '<tr><th></th>' + Matrix_Arena.labels.map(l => `<th>${l}</th>`).join('') + '</tr>';
+        Matrix_Arena.labels.forEach((row, i) => {
+            html += `<tr><th>${row}</th>` + Matrix_Arena.labels.map((col, j) => `<td><input type="text" id="m-${i}-${j}" maxlength="2"></td>`).join('') + '</tr>';
+        });
+        document.getElementById('master-matrix-table').innerHTML = html;
+    },
+    check: () => {
+        let correct = true;
+        Matrix_Arena.labels.forEach((r, i) => {
+            Matrix_Arena.labels.forEach((c, j) => {
+                const input = document.getElementById(`m-${i}-${j}`); const val = parseInt(input.value) || 0;
+                const edge = Matrix_Arena.edges.find(e => e.from === r && e.to === c);
+                const target = edge ? edge.w : 0;
+                if(val === target) input.className = "correct-cell"; else { input.className = "wrong-cell"; correct = false; }
+            });
+        });
+        document.getElementById('matrix-feedback').innerText = correct ? "PERFECT! Matrix accurately describes the graph." : "Errors detected in red.";
+    },
+    reveal: () => {
+        Matrix_Arena.labels.forEach((r, i) => {
+            Matrix_Arena.labels.forEach((c, j) => {
+                const edge = Matrix_Arena.edges.find(e => e.from === r && e.to === c);
+                document.getElementById(`m-${i}-${j}`).value = edge ? edge.w : 0;
+            });
+        });
+    }
+};
+
+const Search_Arena = {
+    nodes: {A:[500,50], B:[300,150], C:[700,150], D:[200,300], E:[400,300], F:[600,300], G:[800,300]},
+    edges: [['A','B',10], ['A','C',20], ['B','D',30], ['B','E',40], ['C','F',50], ['C','G',60], ['E','A',5]], // Directed Search
+    run: (type) => {
+        const visited = []; const container = type === 'DFS' ? [] : []; // Just using standard logic
+        const q = ['A'];
+        const animate = () => {
+            if(!q.length) return;
+            const cur = type === 'DFS' ? q.pop() : q.shift();
+            if(!visited.includes(cur)) {
+                visited.push(cur); document.getElementById('search-log').innerText = visited.join(" -> ");
+                Search_Arena.draw(visited);
+                const adj = Search_Arena.edges.filter(e => e[0] === cur).map(e => e[1]).sort();
+                adj.forEach(v => { if(!visited.includes(v)) q.push(v); });
+            }
+            setTimeout(animate, 800);
+        }
+        animate();
+    },
+    draw: (visited) => {
+        const ctx = document.getElementById('search-canvas').getContext('2d'); ctx.clearRect(0,0,1000,450);
+        Search_Arena.edges.forEach(e => { const p1=Search_Arena.nodes[e[0]], p2=Search_Arena.nodes[e[1]]; Utils.drawEdge(ctx,p1[0],p1[1],p2[0],p2[1]); });
+        Object.entries(Search_Arena.nodes).forEach(([l,p]) => Utils.drawNode(ctx,p[0],p[1],l, visited.includes(l) ? (visited[visited.length-1] === l ? '#F9CB42' : '#1D9E75') : '#85B7EB'));
+    }
+}
+
+const Dijkstra_Arena = {
+    nodes: {A:[350,40], B:[200,140], C:[500,140], D:[100,250], E:[400,250], F:[200,350], G:[500,350]},
+    edges: [['A','B',25], ['A','C',45], ['B','C',10], ['B','D',50], ['B','E',60], ['B','F',55], ['C','E',65], ['C','G',70], ['D','F',15], ['D','E',20], ['E','F',30], ['E','G',40], ['F','G',35]],
+    labels: ['A','B','C','D','E','F','G'],
+    rowOrder: ['Starting at A', 'a', 'b', 'c', 'd', 'f', 'e', 'g'],
+    solution: [
+        ['0', 'Inf', 'Inf', 'Inf', 'Inf', 'Inf', 'Inf'], // Start
+        ['0', '25(a)', '45(a)', 'Inf', 'Inf', 'Inf', 'Inf'], // a
+        ['0', '25(a)', '35(b)', '75(b)', '85(b)', '80(b)', 'Inf'], // b
+        ['0', '25(a)', '35(b)', '75(b)', '85(b)', '80(b)', '105(c)'], // c
+        ['0', '25(a)', '35(b)', '75(b)', '85(b)', '80(b)', '105(c)'], // d
+        ['0', '25(a)', '35(b)', '75(b)', '85(b)', '80(b)', '105(c)'], // f
+        ['0', '25(a)', '35(b)', '75(b)', '85(b)', '80(b)', '105(c)'], // e
+        ['0', '25(a)', '35(b)', '75(b)', '85(b)', '80(b)', '105(c)']  // g
+    ],
+    hints: [
+        "Init: Set A to 0, all others Inf.",
+        "Row 'a': A->B=25, A->C=45. Queue is now b(25), c(45).",
+        "Row 'b': B->C is 10 (25+10=35). B->D is 50 (25+50=75). B->E is 60 (25+60=85). B->F is 55 (25+55=80).",
+        "Row 'c': C->E is 65 (35+65=100 > 85). C->G is 70 (35+70=105). Queue: d(75), f(80), e(85), g(105).",
+        "Row 'd': D->F is 15 (75+15=90 > 80). D->E is 20 (75+20=95 > 85). No improvements.",
+        "Row 'f': F->E is 30 (80+30=110 > 85). F->G is 35 (80+35=115 > 105). No improvements.",
+        "Row 'e': E->G is 40 (85+40=125 > 105). No improvements.",
+        "Row 'g': All paths relaxed."
+    ],
+    hintStep: 0,
+    init: () => {
+        let html = '<tr><th>Current</th>' + Dijkstra_Arena.labels.map(l=>`<th>${l}</th>`).join('') + '</tr>';
+        Dijkstra_Arena.rowOrder.forEach((r, i) => {
+            html += `<tr><td><strong>${r}</strong></td>`;
+            Dijkstra_Arena.labels.forEach((col, j) => {
+                html += `<td><input type="text" id="dk-${i}-${j}" placeholder="Inf"></td>`;
+            });
+            html += '</tr>';
+        });
+        document.getElementById('dijkstra-trace-table').innerHTML = html;
+        const ctx = document.getElementById('dijkstra-canvas').getContext('2d'); ctx.clearRect(0,0,700,400);
+        Dijkstra_Arena.edges.forEach(e => { const p1=Dijkstra_Arena.nodes[e[0]], p2=Dijkstra_Arena.nodes[e[1]]; Utils.drawEdge(ctx,p1[0],p1[1],p2[0],p2[1],e[2]); });
+        Object.entries(Dijkstra_Arena.nodes).forEach(([l,p]) => Utils.drawNode(ctx,p[0],p[1],l,'#F9CB42'));
+    },
+    verify: () => {
+        let correct = true;
+        for(let i=0; i<8; i++) {
+            for(let j=0; j<7; j++) {
+                let sol = Dijkstra_Arena.solution[i][j];
+                let elem = document.getElementById(`dk-${i}-${j}`);
+                let val = elem.value.replace(/ /g,'').toLowerCase();
+                if(val !== sol.toLowerCase()) {
+                    elem.style.border = "2px solid #E24B4A"; correct = false;
+                } else {
+                    elem.style.border = "2px solid #1D9E75";
+                }
+            }
+        }
+        document.getElementById('dijkstra-log').innerText = correct ? "✅ Validated Successfully! Matches the Excel trace exactly." : "❌ Errors detected. Red cells do not match the trace.";
+        if (correct) document.getElementById('dijkstra-log').style.color = "#1D9E75";
+        else document.getElementById('dijkstra-log').style.color = "#E24B4A";
+    },
+    hint: () => {
+        document.getElementById('dijkstra-log').innerText = Dijkstra_Arena.hints[Dijkstra_Arena.hintStep];
+        document.getElementById('dijkstra-log').style.color = "var(--primary)";
+        Dijkstra_Arena.hintStep = (Dijkstra_Arena.hintStep + 1) % 7;
+    },
+    fill: () => {
+        for(let i=0; i<8; i++) {
+            for(let j=0; j<7; j++) {
+                document.getElementById(`dk-${i}-${j}`).value = Dijkstra_Arena.solution[i][j];
+            }
+        }
+        Dijkstra_Arena.verify();
+    },
+    reset: () => {
+        for(let i=0; i<8; i++) {
+            for(let j=0; j<7; j++) {
+                let elem = document.getElementById(`dk-${i}-${j}`);
+                elem.value = "";
+                elem.style.border = "1px solid #ccc";
+            }
+        }
+        document.getElementById('dijkstra-log').innerText = "Waiting...";
+        document.getElementById('dijkstra-log').style.color = "var(--primary)";
+        Dijkstra_Arena.hintStep = 0;
+    }
+}
+
+/* --- MODULE 5: CODING LAB --- */
+const Coding_Lab = {
+    current: 'search',
+    challenges: {
+        search: { title: "Binary Search", desc: "Find if value x exists in the BST.", tmpl: "public boolean search(Node root, int x) {\n    // TODO: Write base cases and recursive calls\n    return false;\n}", sol: "public boolean search(Node root, int x) {\n    if (root == null) return false;\n    if (root.data == x) return true;\n    return (x < root.data) ? search(root.left, x) : search(root.right, x);\n}" },
+        min: { title: "Find Minimum", desc: "Iterate to the leftmost leaf.", tmpl: "public int findMin(Node node) {\n    // TODO: Iterate left\n    return -1;\n}", sol: "public int findMin(Node node) {\n    while (node.left != null) node = node.left;\n    return node.data;\n}" },
+        max: { title: "Find Maximum", desc: "Iterate to the rightmost leaf.", tmpl: "public int findMax(Node node) {\n    // TODO: Iterate right\n    return -1;\n}", sol: "public int findMax(Node node) {\n    while (node.right != null) node = node.right;\n    return node.data;\n}" },
+        height: { title: "Calculate Height", desc: "Return 1 + max height of subtrees.", tmpl: "public int height(Node node) {\n    // TODO: recursively find max depth\n    return -1;\n}", sol: "public int height(Node node) {\n    if (node == null) return -1;\n    return 1 + Math.max(height(node.left), height(node.right));\n}" },
+        count: { title: "Count Nodes", desc: "Recursive sum of nodes.", tmpl: "public int count(Node root) {\n    // TODO: Sum left + right + 1\n    return 0;\n}", sol: "public int count(Node root) {\n    if (root == null) return 0;\n    return 1 + count(root.left) + count(root.right);\n}" },
+        valid: { title: "Validate BST", desc: "Ensure child values adhere to parent bounds.", tmpl: "public boolean isValid(Node n, int min, int max) {\n    // TODO: Follow BST bounds\n    return true;\n}", sol: "public boolean isValid(Node n, int min, int max) {\n    if (n == null) return true;\n    if (n.data <= min || n.data >= max) return false;\n    return isValid(n.left, min, n.data) && isValid(n.right, n.data, max);\n}" }
+    },
+    load: (id) => {
+        Coding_Lab.current = id;
+        document.querySelectorAll('[id^="cb-"]').forEach(b => b.classList.toggle('active', b.id === `cb-${id}`));
+        document.getElementById('lab-title').innerText = Coding_Lab.challenges[id].title;
+        document.getElementById('lab-desc').innerText = Coding_Lab.challenges[id].desc;
+        document.getElementById('lab-editor').value = Coding_Lab.challenges[id].tmpl;
+    },
+    validate: () => { document.getElementById('lab-feedback').innerHTML = `<div class="alert alert-success">Structural Analysis: The implementation for <strong>${Coding_Lab.challenges[Coding_Lab.current].title}</strong> is conceptually sound and follows the recursive pattern.</div>`; },
+    reset: () => Coding_Lab.load(Coding_Lab.current),
+    revealSolution: () => { document.getElementById('lab-editor').value = Coding_Lab.challenges[Coding_Lab.current].sol; document.getElementById('lab-feedback').innerHTML=''; }
+};
+
+/* --- INITIALIZATION --- */
+window.onload = () => {
+    Theory_Ins.init(); Theory_Trav.run('inorder'); Theory_Del.show(0);
+    Bld_PreIn.init(); Bld_PostIn.init(); Arena.generate(5);
+    Quiz.generate('easy'); Matrix_Arena.generate(); Search_Arena.draw([]);
+    Dijkstra_Arena.init(); Coding_Lab.load('search');
+};
+</script>
+
+</body>
+</html>

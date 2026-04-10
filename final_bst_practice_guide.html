@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>COMP 2080 - Complete BST Practice Guide</title>
+<style>
+* { box-sizing: border-box; }
+body { 
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+  max-width: 1400px; 
+  margin: 0 auto; 
+  padding: 40px 20px; 
+  background: #fafaf9;
+  line-height: 1.6;
+}
+.header { 
+  background: linear-gradient(135deg, #378ADD 0%, #1D9E75 100%); 
+  color: white; 
+  padding: 40px; 
+  border-radius: 16px; 
+  margin-bottom: 32px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.header h1 { margin: 0 0 8px 0; font-size: 32px; }
+.header .subtitle { opacity: 0.95; font-size: 16px; margin: 0; }
+.nav { 
+  background: white; 
+  padding: 20px; 
+  border-radius: 12px; 
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 20px;
+  z-index: 100;
+}
+.nav h3 { margin: 0 0 12px 0; color: #2d2d2a; font-size: 18px; }
+.nav-links { display: flex; gap: 12px; flex-wrap: wrap; }
+.nav-link { 
+  padding: 8px 16px; 
+  background: #e8e7e1; 
+  border-radius: 6px; 
+  text-decoration: none; 
+  color: #3d3d3a;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.nav-link:hover { background: #378ADD; color: white; transform: translateY(-1px); }
+.section { 
+  background: white; 
+  border-radius: 12px; 
+  padding: 32px; 
+  margin-bottom: 32px; 
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  scroll-margin-top: 100px;
+}
+h2 { 
+  color: #2d2d2a; 
+  margin-top: 0; 
+  font-size: 28px;
+  border-bottom: 2px solid #e8e7e1;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+}
+h3 { color: #3d3d3a; font-size: 20px; margin-top: 24px; }
+.subtitle-text { color: #73726c; font-size: 15px; margin-bottom: 24px; }
+.btn-group { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+button, .btn { 
+  padding: 10px 20px; 
+  border: none; 
+  border-radius: 8px; 
+  background: #e8e7e1; 
+  cursor: pointer; 
+  font-size: 14px; 
+  font-weight: 500; 
+  transition: all 0.2s;
+  color: #3d3d3a;
+}
+button:hover, .btn:hover { background: #d3d2cc; transform: translateY(-1px); }
+button.active, .btn.active { background: #378ADD; color: white; }
+button:disabled { opacity: 0.4; cursor: not-allowed; }
+button.success { background: #639922; color: white; }
+button.error { background: #E24B4A; color: white; }
+canvas { 
+  border: 1px solid #d3d1c7; 
+  border-radius: 8px; 
+  background: white; 
+  display: block; 
+  margin: 20px auto;
+  max-width: 100%;
+}
+.practice-arena {
+  background: #f5f4f0;
+  padding: 24px;
+  border-radius: 12px;
+  margin: 20px 0;
+  border: 2px solid #d3d1c7;
+}
+.practice-input {
+  display: flex;
+  gap: 12px;
+  margin: 16px 0;
+  align-items: center;
+}
+.practice-input input {
+  padding: 10px;
+  border: 1px solid #d3d1c7;
+  border-radius: 6px;
+  font-size: 14px;
+  width: 100px;
+}
+.code-example {
+  background: #2d2d2a;
+  color: #c2c0b6;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+  overflow-x: auto;
+}
+.code-example pre {
+  margin: 0;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.keyword { color: #F9CB42; }
+.class-name { color: #85B7EB; }
+.comment { color: #888780; }
+.string { color: #97C459; }
+textarea {
+  width: 100%;
+  min-height: 250px;
+  padding: 12px;
+  border: 1px solid #d3d1c7;
+  border-radius: 6px;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  resize: vertical;
+  background: #2d2d2a;
+  color: #c2c0b6;
+}
+.feedback {
+  padding: 12px;
+  border-radius: 6px;
+  margin-top: 12px;
+  display: none;
+}
+.feedback.success {
+  background: #f0f9e9;
+  color: #3b6d11;
+  border-left: 3px solid #639922;
+  display: block;
+}
+.feedback.error {
+  background: #fcebeb;
+  color: #791f1f;
+  border-left: 3px solid #e24b4a;
+  display: block;
+}
+.hint {
+  background: #fef3e6;
+  padding: 12px;
+  border-radius: 6px;
+  margin: 12px 0;
+  border-left: 3px solid #BA7517;
+  display: none;
+}
+.hint.show { display: block; }
+.solution {
+  background: #f0f9e9;
+  padding: 12px;
+  border-radius: 6px;
+  margin: 12px 0;
+  border-left: 3px solid #639922;
+  display: none;
+}
+.solution.show { display: block; }
+.challenge-card {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 16px 0;
+  border: 2px solid #e8e7e1;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.challenge-card:hover {
+  border-color: #378ADD;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.challenge-card h4 {
+  margin-top: 0;
+  color: #378ADD;
+}
+.challenge-card.active {
+  border-color: #1D9E75;
+  background: #f0f9e9;
+}
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 20px; }
+.key-point { 
+  background: #f0f9e9; 
+  border-left: 4px solid #639922; 
+  padding: 16px; 
+  margin: 16px 0;
+  border-radius: 4px;
+}
+.warning { 
+  background: #fef3e6; 
+  border-left: 4px solid #BA7517; 
+  padding: 16px; 
+  margin: 16px 0;
+  border-radius: 4px;
+}
+.answer-section {
+  background: #e6f1fb;
+  padding: 16px;
+  border-radius: 8px;
+  margin: 16px 0;
+  display: none;
+}
+.answer-section.show { display: block; }
+.answer-section h4 { margin-top: 0; color: #0c447c; }
+@media (max-width: 768px) {
+  .grid { grid-template-columns: 1fr; }
+  .nav { position: relative; top: 0; }
+  body { padding: 20px 10px; }
+  .section { padding: 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+<h1>COMP 2080 - Complete BST Practice Guide</h1>
+<p class="subtitle">Interactive Practice with Random Trees & Code Validation</p>
+</div>
+
+<nav class="nav">
+<h3>Quick Navigation</h3>
+<div class="nav-links">
+<a href="#practice-insertion" class="nav-link">Insertion Arena</a>
+<a href="#practice-deletion" class="nav-link">Deletion Arena</a>
+<a href="#practice-traversal" class="nav-link">Traversal Arena</a>
+<a href="#coding-arena" class="nav-link">Coding Challenges</a>
+<a href="#code-examples" class="nav-link">Java Examples</a>
+</div>
+</nav>
+
+<!-- PRACTICE: INSERTION -->
+<section id="practice-insertion" class="section">
+<h2>Practice Arena: BST Insertion</h2>
+<p class="subtitle-text">Build your own Binary Search Tree by inserting values</p>
+
+<div class="practice-arena">
+<h3 style="margin-top: 0;">Interactive Insertion Practice</h3>
+<div class="practice-input">
+<label style="font-weight: 500;">Insert value:</label>
+<input type="number" id="insert-value" placeholder="Enter number">
+<button onclick="insertPracticeValue()">Insert</button>
+<button onclick="resetPracticeTree()">Reset Tree</button>
+<button onclick="generateRandomSequence()">Random Sequence</button>
+</div>
+<div style="margin: 12px 0; color: #5f5e5a; font-size: 14px;">
+<strong>Current sequence:</strong> <span id="practice-sequence">Empty tree</span>
+</div>
+<canvas id="practice-insert-canvas" width="700" height="400"></canvas>
+</div>
+
+<div class="key-point">
+<strong>Key Insertion Steps:</strong>
+<ol style="margin: 8px 0;">
+<li>If tree is empty, create root</li>
+<li>Compare value with current node</li>
+<li>If less: go left, if greater: go right</li>
+<li>Repeat until you find a null position</li>
+<li>Create new node at that position</li>
+</ol>
+</div>
+</section>
+
+<!-- PRACTICE: DELETION -->
+<section id="practice-deletion" class="section">
+<h2>Practice Arena: BST Deletion</h2>
+<p class="subtitle-text">Practice deleting nodes from different trees</p>
+
+<div class="practice-arena">
+<h3 style="margin-top: 0;">Interactive Deletion Practice</h3>
+<div class="practice-input">
+<label style="font-weight: 500;">Delete value:</label>
+<input type="number" id="delete-value" placeholder="Enter number">
+<button onclick="deletePracticeValue()">Delete</button>
+<button onclick="resetDeleteTree()">Reset Tree</button>
+<button onclick="generateRandomDeleteTree()">Random Tree</button>
+</div>
+<div style="margin: 12px 0; color: #5f5e5a; font-size: 14px;">
+<strong>Current tree values:</strong> <span id="delete-sequence">50, 20, 90, 19, 25, 70, 100</span>
+</div>
+<canvas id="practice-delete-canvas" width="700" height="400"></canvas>
+</div>
+
+<div class="warning">
+<strong>Remember the 3 deletion cases:</strong>
+<ul style="margin: 8px 0;">
+<li><strong>0 children:</strong> Simply remove the node</li>
+<li><strong>1 child:</strong> Replace node with its child</li>
+<li><strong>2 children:</strong> Replace with in-order successor (or predecessor)</li>
+</ul>
+</div>
+</section>
+
+<!-- PRACTICE: TRAVERSALS -->
+<section id="practice-traversal" class="section">
+<h2>Practice Arena: BST Traversals</h2>
+<p class="subtitle-text">Practice identifying traversal orders from random trees</p>
+
+<div class="practice-arena">
+<h3 style="margin-top: 0;">Traversal Challenge</h3>
+
+<div class="btn-group">
+<button onclick="generateTraversalTree('easy')">Easy (5 nodes)</button>
+<button onclick="generateTraversalTree('medium')">Medium (7 nodes)</button>
+<button onclick="generateTraversalTree('hard')">Hard (9 nodes)</button>
+<button onclick="toggleTraversalAnswers()">Show Answers</button>
+<button onclick="toggleTraversalHint()">Hint</button>
+</div>
+
+<canvas id="traversal-canvas" width="700" height="400"></canvas>
+
+<div style="margin: 20px 0;">
+<label style="display: block; margin: 12px 0;">
+<strong>In-order (Left → Root → Right):</strong><br>
+<input type="text" id="trav-inorder" style="width: 100%; padding: 8px; margin-top: 4px;" placeholder="Enter values separated by commas">
+</label>
+<label style="display: block; margin: 12px 0;">
+<strong>Pre-order (Root → Left → Right):</strong><br>
+<input type="text" id="trav-preorder" style="width: 100%; padding: 8px; margin-top: 4px;" placeholder="Enter values separated by commas">
+</label>
+<label style="display: block; margin: 12px 0;">
+<strong>Post-order (Left → Right → Root):</strong><br>
+<input type="text" id="trav-postorder" style="width: 100%; padding: 8px; margin-top: 4px;" placeholder="Enter values separated by commas">
+</label>
+<label style="display: block; margin: 12px 0;">
+<strong>Level-order (Breadth-first):</strong><br>
+<input type="text" id="trav-levelorder" style="width: 100%; padding: 8px; margin-top: 4px;" placeholder="Enter values separated by commas">
+</label>
+</div>
+
+<button onclick="checkTraversalAnswers()">Check My Answers</button>
+
+<div id="trav-hint" class="hint">
+<strong>Traversal Tips:</strong>
+<ul>
+<li><strong>In-order:</strong> Visit left subtree, then root, then right subtree (gives sorted order for BST)</li>
+<li><strong>Pre-order:</strong> Visit root first, then left, then right</li>
+<li><strong>Post-order:</strong> Visit left, then right, then root last</li>
+<li><strong>Level-order:</strong> Visit nodes level by level, left to right (use a queue)</li>
+</ul>
+</div>
+
+<div id="trav-answers" class="answer-section">
+<h4>Correct Answers:</h4>
+<div id="trav-answers-content"></div>
+</div>
+
+<div id="trav-feedback" class="feedback"></div>
+</div>
+</section>
+
+<!-- CODING ARENA -->
+<section id="coding-arena" class="section">
+<h2>Coding Practice Arena</h2>
+<p class="subtitle-text">Write and test your BST code with real-time feedback</p>
+
+<div class="practice-arena">
+<h3 style="margin-top: 0;" id="current-challenge-title">Select a Challenge Below</h3>
+<p id="current-challenge-desc" style="color: #5f5e5a;">Click on any challenge card to load it into the editor</p>
+
+<textarea id="code-editor" placeholder="// Your code will appear here when you select a challenge..."></textarea>
+
+<div class="btn-group">
+<button onclick="runCodeChallenge()">Run Code</button>
+<button onclick="showChallengeSolution()">Show Solution</button>
+<button onclick="clearCode()">Clear</button>
+</div>
+
+<div id="code-feedback" class="feedback"></div>
+
+<div id="code-solution" class="solution"></div>
+</div>
+
+<h3 style="margin-top: 32px;">Coding Challenges - Click to Load</h3>
+<div class="grid">
+<div class="challenge-card" onclick="loadChallenge('search')">
+<h4>Challenge 1: BST Search</h4>
+<p style="font-size: 14px; margin: 8px 0;">Write a method that returns true if a value exists in the BST.</p>
+<p style="font-size: 13px; color: #5f5e5a; margin: 8px 0;">Difficulty: ⭐ Easy</p>
+</div>
+
+<div class="challenge-card" onclick="loadChallenge('findMin')">
+<h4>Challenge 2: Find Minimum</h4>
+<p style="font-size: 14px; margin: 8px 0;">Write a method to find the minimum value in a BST.</p>
+<p style="font-size: 13px; color: #5f5e5a; margin: 8px 0;">Difficulty: ⭐ Easy</p>
+</div>
+
+<div class="challenge-card" onclick="loadChallenge('findMax')">
+<h4>Challenge 3: Find Maximum</h4>
+<p style="font-size: 14px; margin: 8px 0;">Write a method to find the maximum value in a BST.</p>
+<p style="font-size: 13px; color: #5f5e5a; margin: 8px 0;">Difficulty: ⭐ Easy</p>
+</div>
+
+<div class="challenge-card" onclick="loadChallenge('countNodes')">
+<h4>Challenge 4: Count Nodes</h4>
+<p style="font-size: 14px; margin: 8px 0;">Write a method to count the total number of nodes in a BST.</p>
+<p style="font-size: 13px; color: #5f5e5a; margin: 8px 0;">Difficulty: ⭐⭐ Medium</p>
+</div>
+
+<div class="challenge-card" onclick="loadChallenge('height')">
+<h4>Challenge 5: Tree Height</h4>
+<p style="font-size: 14px; margin: 8px 0;">Write a method to find the height of the BST.</p>
+<p style="font-size: 13px; color: #5f5e5a; margin: 8px 0;">Difficulty: ⭐⭐ Medium</p>
+</div>
+
+<div class="challenge-card" onclick="loadChallenge('isValidBST')">
+<h4>Challenge 6: Validate BST</h4>
+<p style="font-size: 14px; margin: 8px 0;">Write a method to check if a tree is a valid BST.</p>
+<p style="font-size: 13px; color: #5f5e5a; margin: 8px 0;">Difficulty: ⭐⭐⭐ Hard</p>
+</div>
+</div>
+</section>
+
+<!-- CODE EXAMPLES -->
+<section id="code-examples" class="section">
+<h2>Java Code Examples</h2>
+<p class="subtitle-text">Complete implementations with detailed comments</p>
+
+<h3>BST Node Class</h3>
+<div class="code-example">
+<pre><span class="comment">// Node class definition</span>
+<span class="keyword">class</span> <span class="class-name">Node</span> {
+    <span class="keyword">int</span> data;
+    <span class="class-name">Node</span> left, right;
+    
+    <span class="comment">// Constructor: Create a new node with given value</span>
+    <span class="keyword">public</span> <span class="class-name">Node</span>(<span class="keyword">int</span> value) {
+        data = value;
+        left = right = <span class="keyword">null</span>;  <span class="comment">// Both children start as null</span>
+    }
+}</pre>
+</div>
+
+<h3>BST Insertion</h3>
+<div class="code-example">
+<pre><span class="comment">// Public method to insert a value</span>
+<span class="keyword">public void</span> insert(<span class="keyword">int</span> value) {
+    root = insertRecursive(root, value);
+}
+
+<span class="comment">// Private recursive helper method</span>
+<span class="keyword">private</span> <span class="class-name">Node</span> insertRecursive(<span class="class-name">Node</span> current, <span class="keyword">int</span> value) {
+    <span class="comment">// Base case: Found the null position, create new node</span>
+    <span class="keyword">if</span> (current == <span class="keyword">null</span>) {
+        <span class="keyword">return new</span> <span class="class-name">Node</span>(value);
+    }
+    
+    <span class="comment">// Recursive case: Decide left or right</span>
+    <span class="keyword">if</span> (value < current.data) {
+        <span class="comment">// Value is less than current, go LEFT</span>
+        current.left = insertRecursive(current.left, value);
+    } <span class="keyword">else if</span> (value > current.data) {
+        <span class="comment">// Value is greater than current, go RIGHT</span>
+        current.right = insertRecursive(current.right, value);
+    }
+    <span class="comment">// If value == current.data, we don't insert (no duplicates)</span>
+    
+    <span class="keyword">return</span> current;
+}</pre>
+</div>
+
+<h3>BST Deletion</h3>
+<div class="code-example">
+<pre><span class="comment">// Method to delete a value from BST</span>
+<span class="keyword">public void</span> delete(<span class="keyword">int</span> value) {
+    root = deleteRecursive(root, value);
+}
+
+<span class="keyword">private</span> <span class="class-name">Node</span> deleteRecursive(<span class="class-name">Node</span> current, <span class="keyword">int</span> value) {
+    <span class="keyword">if</span> (current == <span class="keyword">null</span>) <span class="keyword">return null</span>;
+    
+    <span class="keyword">if</span> (value < current.data) {
+        current.left = deleteRecursive(current.left, value);
+    } <span class="keyword">else if</span> (value > current.data) {
+        current.right = deleteRecursive(current.right, value);
+    } <span class="keyword">else</span> {
+        <span class="comment">// CASE 1: No children (leaf)</span>
+        <span class="keyword">if</span> (current.left == <span class="keyword">null</span> && current.right == <span class="keyword">null</span>) {
+            <span class="keyword">return null</span>;
+        }
+        <span class="comment">// CASE 2a: Only right child</span>
+        <span class="keyword">if</span> (current.left == <span class="keyword">null</span>) <span class="keyword">return</span> current.right;
+        <span class="comment">// CASE 2b: Only left child</span>
+        <span class="keyword">if</span> (current.right == <span class="keyword">null</span>) <span class="keyword">return</span> current.left;
+        
+        <span class="comment">// CASE 3: Two children - find in-order successor</span>
+        <span class="keyword">int</span> successorValue = findMin(current.right);
+        current.data = successorValue;
+        current.right = deleteRecursive(current.right, successorValue);
+    }
+    <span class="keyword">return</span> current;
+}
+
+<span class="keyword">private int</span> findMin(<span class="class-name">Node</span> node) {
+    <span class="keyword">while</span> (node.left != <span class="keyword">null</span>) node = node.left;
+    <span class="keyword">return</span> node.data;
+}</pre>
+</div>
+
+<h3>BST Traversals</h3>
+<div class="code-example">
+<pre><span class="comment">// IN-ORDER: Left → Root → Right (sorted order)</span>
+<span class="keyword">public void</span> inOrder(<span class="class-name">Node</span> node) {
+    <span class="keyword">if</span> (node == <span class="keyword">null</span>) <span class="keyword">return</span>;
+    inOrder(node.left);
+    <span class="class-name">System</span>.out.print(node.data + <span class="string">" "</span>);
+    inOrder(node.right);
+}
+
+<span class="comment">// PRE-ORDER: Root → Left → Right</span>
+<span class="keyword">public void</span> preOrder(<span class="class-name">Node</span> node) {
+    <span class="keyword">if</span> (node == <span class="keyword">null</span>) <span class="keyword">return</span>;
+    <span class="class-name">System</span>.out.print(node.data + <span class="string">" "</span>);
+    preOrder(node.left);
+    preOrder(node.right);
+}
+
+<span class="comment">// POST-ORDER: Left → Right → Root</span>
+<span class="keyword">public void</span> postOrder(<span class="class-name">Node</span> node) {
+    <span class="keyword">if</span> (node == <span class="keyword">null</span>) <span class="keyword">return</span>;
+    postOrder(node.left);
+    postOrder(node.right);
+    <span class="class-name">System</span>.out.print(node.data + <span class="string">" "</span>);
+}
+
+<span class="comment">// LEVEL-ORDER: Uses Queue (breadth-first)</span>
+<span class="keyword">public void</span> levelOrder(<span class="class-name">Node</span> root) {
+    <span class="keyword">if</span> (root == <span class="keyword">null</span>) <span class="keyword">return</span>;
+    <span class="class-name">Queue</span>&lt;<span class="class-name">Node</span>&gt; queue = <span class="keyword">new</span> <span class="class-name">LinkedList</span>&lt;&gt;();
+    queue.add(root);
+    <span class="keyword">while</span> (!queue.isEmpty()) {
+        <span class="class-name">Node</span> current = queue.remove();
+        <span class="class-name">System</span>.out.print(current.data + <span class="string">" "</span>);
+        <span class="keyword">if</span> (current.left != <span class="keyword">null</span>) queue.add(current.left);
+        <span class="keyword">if</span> (current.right != <span class="keyword">null</span>) queue.add(current.right);
+    }
+}</pre>
+</div>
+</section>
+
+<div class="section" style="background: linear-gradient(135deg, #378ADD 0%, #1D9E75 100%); color: white;">
+<h2 style="color: white; border-bottom-color: rgba(255,255,255,0.3);">Study Tips</h2>
+<ul style="line-height: 2;">
+<li><strong>Practice with Random Trees:</strong> Use the random tree generators to test yourself</li>
+<li><strong>Draw It Out:</strong> Sketch trees on paper while working through problems</li>
+<li><strong>Understand Recursion:</strong> Most BST operations use recursion - trace through the calls</li>
+<li><strong>Memorize Traversals:</strong> In/Pre/Post-order patterns are essential</li>
+<li><strong>Code Daily:</strong> Practice the coding challenges until you can write them from memory</li>
+</ul>
+</div>
+
+<script>
+// ===== NODE CLASS =====
+class PracticeNode {
+  constructor(val) {
+    this.data = val;
+    this.left = null;
+    this.right = null;
+  }
+}
+
+// ===== INSERTION PRACTICE =====
+let practiceTree = null;
+let practiceSequence = [];
+
+function insertPracticeValue() {
+  const input = document.getElementById('insert-value');
+  const value = parseInt(input.value);
+  
+  if (isNaN(value)) {
+    alert('Please enter a valid number');
+    return;
+  }
+  
+  if (practiceTree === null) {
+    practiceTree = new PracticeNode(value);
+  } else {
+    insertNode(practiceTree, value);
+  }
+  
+  practiceSequence.push(value);
+  input.value = '';
+  updatePracticeDisplay();
+}
+
+function insertNode(node, value) {
+  if (value < node.data) {
+    if (node.left === null) {
+      node.left = new PracticeNode(value);
+    } else {
+      insertNode(node.left, value);
+    }
+  } else if (value > node.data) {
+    if (node.right === null) {
+      node.right = new PracticeNode(value);
+    } else {
+      insertNode(node.right, value);
+    }
+  }
+}
+
+function resetPracticeTree() {
+  practiceTree = null;
+  practiceSequence = [];
+  updatePracticeDisplay();
+}
+
+function generateRandomSequence() {
+  resetPracticeTree();
+  const count = 5 + Math.floor(Math.random() * 3);
+  for (let i = 0; i < count; i++) {
+    const val = Math.floor(Math.random() * 90) + 10;
+    if (practiceTree === null) {
+      practiceTree = new PracticeNode(val);
+    } else {
+      insertNode(practiceTree, val);
+    }
+    practiceSequence.push(val);
+  }
+  updatePracticeDisplay();
+}
+
+function updatePracticeDisplay() {
+  document.getElementById('practice-sequence').textContent = 
+    practiceSequence.length > 0 ? practiceSequence.join(', ') : 'Empty tree';
+  drawTree('practice-insert-canvas', practiceTree);
+}
+
+// ===== DELETION PRACTICE =====
+let deleteTree = null;
+let deleteValues = [];
+
+function resetDeleteTree() {
+  deleteTree = new PracticeNode(50);
+  deleteTree.left = new PracticeNode(20);
+  deleteTree.right = new PracticeNode(90);
+  deleteTree.left.left = new PracticeNode(19);
+  deleteTree.left.right = new PracticeNode(25);
+  deleteTree.right.left = new PracticeNode(70);
+  deleteTree.right.right = new PracticeNode(100);
+  
+  deleteValues = getAllValues(deleteTree);
+  updateDeleteDisplay();
+}
+
+function generateRandomDeleteTree() {
+  const count = 6 + Math.floor(Math.random() * 3);
+  const values = [];
+  const used = new Set();
+  
+  while (values.length < count) {
+    const val = Math.floor(Math.random() * 90) + 10;
+    if (!used.has(val)) {
+      values.push(val);
+      used.add(val);
+    }
+  }
+  
+  deleteTree = new PracticeNode(values[0]);
+  for (let i = 1; i < values.length; i++) {
+    insertNode(deleteTree, values[i]);
+  }
+  
+  deleteValues = getAllValues(deleteTree);
+  updateDeleteDisplay();
+}
+
+function getAllValues(node) {
+  if (node === null) return [];
+  return [...getAllValues(node.left), node.data, ...getAllValues(node.right)];
+}
+
+function deletePracticeValue() {
+  const input = document.getElementById('delete-value');
+  const value = parseInt(input.value);
+  
+  if (isNaN(value)) {
+    alert('Please enter a valid number');
+    return;
+  }
+  
+  deleteTree = deleteNode(deleteTree, value);
+  deleteValues = deleteTree ? getAllValues(deleteTree) : [];
+  input.value = '';
+  updateDeleteDisplay();
+}
+
+function deleteNode(node, value) {
+  if (node === null) return null;
+  
+  if (value < node.data) {
+    node.left = deleteNode(node.left, value);
+  } else if (value > node.data) {
+    node.right = deleteNode(node.right, value);
+  } else {
+    if (node.left === null && node.right === null) return null;
+    if (node.left === null) return node.right;
+    if (node.right === null) return node.left;
+    
+    let successor = node.right;
+    while (successor.left !== null) {
+      successor = successor.left;
+    }
+    node.data = successor.data;
+    node.right = deleteNode(node.right, successor.data);
+  }
+  
+  return node;
+}
+
+function updateDeleteDisplay() {
+  document.getElementById('delete-sequence').textContent = 
+    deleteValues.length > 0 ? deleteValues.join(', ') : 'Empty tree';
+  drawTree('practice-delete-canvas', deleteTree);
+}
+
+// ===== TRAVERSAL PRACTICE =====
+let traversalTree = null;
+let traversalAnswers = {
+  inorder: [],
+  preorder: [],
+  postorder: [],
+  levelorder: []
+};
+
+function generateTraversalTree(difficulty) {
+  const sizes = {easy: 5, medium: 7, hard: 9};
+  const count = sizes[difficulty] || 7;
+  
+  const values = [];
+  const used = new Set();
+  
+  while (values.length < count) {
+    const val = Math.floor(Math.random() * 90) + 10;
+    if (!used.has(val)) {
+      values.push(val);
+      used.add(val);
+    }
+  }
+  
+  traversalTree = new PracticeNode(values[0]);
+  for (let i = 1; i < values.length; i++) {
+    insertNode(traversalTree, values[i]);
+  }
+  
+  // Calculate correct answers
+  traversalAnswers.inorder = [];
+  traversalAnswers.preorder = [];
+  traversalAnswers.postorder = [];
+  traversalAnswers.levelorder = [];
+  
+  getInorder(traversalTree, traversalAnswers.inorder);
+  getPreorder(traversalTree, traversalAnswers.preorder);
+  getPostorder(traversalTree, traversalAnswers.postorder);
+  getLevelorder(traversalTree, traversalAnswers.levelorder);
+  
+  drawTree('traversal-canvas', traversalTree);
+  
+  // Clear inputs and feedback
+  document.getElementById('trav-inorder').value = '';
+  document.getElementById('trav-preorder').value = '';
+  document.getElementById('trav-postorder').value = '';
+  document.getElementById('trav-levelorder').value = '';
+  document.getElementById('trav-feedback').className = 'feedback';
+  document.getElementById('trav-answers').classList.remove('show');
+}
+
+function getInorder(node, arr) {
+  if (node === null) return;
+  getInorder(node.left, arr);
+  arr.push(node.data);
+  getInorder(node.right, arr);
+}
+
+function getPreorder(node, arr) {
+  if (node === null) return;
+  arr.push(node.data);
+  getPreorder(node.left, arr);
+  getPreorder(node.right, arr);
+}
+
+function getPostorder(node, arr) {
+  if (node === null) return;
+  getPostorder(node.left, arr);
+  getPostorder(node.right, arr);
+  arr.push(node.data);
+}
+
+function getLevelorder(node, arr) {
+  if (node === null) return;
+  const queue = [node];
+  while (queue.length > 0) {
+    const current = queue.shift();
+    arr.push(current.data);
+    if (current.left) queue.push(current.left);
+    if (current.right) queue.push(current.right);
+  }
+}
+
+function checkTraversalAnswers() {
+  if (!traversalTree) {
+    alert('Please generate a tree first!');
+    return;
+  }
+  
+  const userInorder = document.getElementById('trav-inorder').value.replace(/\s/g, '');
+  const userPreorder = document.getElementById('trav-preorder').value.replace(/\s/g, '');
+  const userPostorder = document.getElementById('trav-postorder').value.replace(/\s/g, '');
+  const userLevelorder = document.getElementById('trav-levelorder').value.replace(/\s/g, '');
+  
+  const correctInorder = traversalAnswers.inorder.join(',');
+  const correctPreorder = traversalAnswers.preorder.join(',');
+  const correctPostorder = traversalAnswers.postorder.join(',');
+  const correctLevelorder = traversalAnswers.levelorder.join(',');
+  
+  const inorderCorrect = userInorder === correctInorder;
+  const preorderCorrect = userPreorder === correctPreorder;
+  const postorderCorrect = userPostorder === correctPostorder;
+  const levelorderCorrect = userLevelorder === correctLevelorder;
+  
+  const feedback = document.getElementById('trav-feedback');
+  
+  if (inorderCorrect && preorderCorrect && postorderCorrect && levelorderCorrect) {
+    feedback.className = 'feedback success';
+    feedback.textContent = '🎉 Perfect! All traversals are correct!';
+  } else {
+    feedback.className = 'feedback error';
+    let msg = '✗ Some answers need correction:\n';
+    if (!inorderCorrect) msg += '- Check in-order traversal\n';
+    if (!preorderCorrect) msg += '- Check pre-order traversal\n';
+    if (!postorderCorrect) msg += '- Check post-order traversal\n';
+    if (!levelorderCorrect) msg += '- Check level-order traversal\n';
+    feedback.textContent = msg;
+  }
+}
+
+function toggleTraversalAnswers() {
+  const answersDiv = document.getElementById('trav-answers');
+  answersDiv.classList.toggle('show');
+  
+  if (traversalTree) {
+    document.getElementById('trav-answers-content').innerHTML = `
+      <p><strong>In-order:</strong> ${traversalAnswers.inorder.join(', ')}</p>
+      <p><strong>Pre-order:</strong> ${traversalAnswers.preorder.join(', ')}</p>
+      <p><strong>Post-order:</strong> ${traversalAnswers.postorder.join(', ')}</p>
+      <p><strong>Level-order:</strong> ${traversalAnswers.levelorder.join(', ')}</p>
+    `;
+  }
+}
+
+function toggleTraversalHint() {
+  document.getElementById('trav-hint').classList.toggle('show');
+}
+
+// ===== DRAWING FUNCTION =====
+function drawTree(canvasId, tree) {
+  const canvas = document.getElementById(canvasId);
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  if (tree === null) {
+    ctx.fillStyle = '#5f5e5a';
+    ctx.font = '16px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Empty tree', 350, 200);
+    return;
+  }
+  
+  const positions = {};
+  calculatePositions(tree, 350, 50, 150, positions);
+  
+  ctx.strokeStyle = '#b4b2a9';
+  ctx.lineWidth = 2;
+  drawEdges(ctx, tree, positions);
+  drawNodes(ctx, tree, positions);
+}
+
+function calculatePositions(node, x, y, offset, positions) {
+  if (node === null) return;
+  positions[node.data] = {x, y};
+  if (node.left) calculatePositions(node.left, x - offset, y + 80, offset * 0.6, positions);
+  if (node.right) calculatePositions(node.right, x + offset, y + 80, offset * 0.6, positions);
+}
+
+function drawEdges(ctx, node, positions) {
+  if (node === null) return;
+  const pos = positions[node.data];
+  
+  if (node.left) {
+    const leftPos = positions[node.left.data];
+    ctx.beginPath();
+    ctx.moveTo(pos.x, pos.y);
+    ctx.lineTo(leftPos.x, leftPos.y);
+    ctx.stroke();
+    drawEdges(ctx, node.left, positions);
+  }
+  
+  if (node.right) {
+    const rightPos = positions[node.right.data];
+    ctx.beginPath();
+    ctx.moveTo(pos.x, pos.y);
+    ctx.lineTo(rightPos.x, rightPos.y);
+    ctx.stroke();
+    drawEdges(ctx, node.right, positions);
+  }
+}
+
+function drawNodes(ctx, node, positions) {
+  if (node === null) return;
+  const pos = positions[node.data];
+  
+  ctx.fillStyle = '#85B7EB';
+  ctx.strokeStyle = '#3d3d3a';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.arc(pos.x, pos.y, 28, 0, 2*Math.PI);
+  ctx.fill();
+  ctx.stroke();
+  
+  ctx.fillStyle = '#0c447c';
+  ctx.font = 'bold 16px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(node.data, pos.x, pos.y);
+  
+  if (node.left) drawNodes(ctx, node.left, positions);
+  if (node.right) drawNodes(ctx, node.right, positions);
+}
+
+// ===== CODING CHALLENGES =====
+let currentChallenge = null;
+
+const challenges = {
+  search: {
+    title: 'Challenge 1: BST Search',
+    description: 'Write a method that returns true if a value exists in the BST, false otherwise.',
+    template: `public boolean search(Node root, int value) {
+    // Your code here
+    
+    
+    
+}`,
+    solution: `public boolean search(Node root, int value) {
+    // Base case: reached null (not found)
+    if (root == null) {
+        return false;
+    }
+    
+    // Found it!
+    if (root.data == value) {
+        return true;
+    }
+    
+    // Search left or right based on value
+    if (value < root.data) {
+        return search(root.left, value);
+    } else {
+        return search(root.right, value);
+    }
+}`,
+    hints: [
+      'Think about the base case: what if the tree is empty?',
+      'If you found the value, return true',
+      'Use BST property: if value < current, search left; otherwise search right',
+      'This is a recursive solution - similar to insert'
+    ],
+    validate: (code) => {
+      const checks = [
+        {test: code.includes('if') && code.includes('root'), msg: 'Include null check'},
+        {test: code.includes('return'), msg: 'Must return a boolean'},
+        {test: code.includes('search') && code.includes('left') || code.includes('right'), msg: 'Use recursive calls on left/right'},
+        {test: code.includes('<') || code.includes('>'), msg: 'Compare values to decide direction'}
+      ];
+      return checks;
+    }
+  },
+  findMin: {
+    title: 'Challenge 2: Find Minimum Value',
+    description: 'Write a method to find and return the minimum value in a BST.',
+    template: `public int findMin(Node root) {
+    // Your code here
+    
+    
+    
+}`,
+    solution: `public int findMin(Node root) {
+    // Keep going left until you can't anymore
+    if (root == null) {
+        throw new IllegalArgumentException("Tree is empty");
+    }
+    
+    while (root.left != null) {
+        root = root.left;
+    }
+    
+    return root.data;
+}`,
+    hints: [
+      'In a BST, the minimum is always the leftmost node',
+      'Keep going left until left child is null',
+      'Can use iteration (while loop) or recursion',
+      'Don\'t forget to handle empty tree case'
+    ],
+    validate: (code) => {
+      const checks = [
+        {test: code.includes('left'), msg: 'Must traverse to the left'},
+        {test: code.includes('while') || code.includes('if'), msg: 'Need loop or recursion'},
+        {test: code.includes('return'), msg: 'Must return the minimum value'},
+        {test: code.includes('null'), msg: 'Handle null/empty tree case'}
+      ];
+      return checks;
+    }
+  },
+  findMax: {
+    title: 'Challenge 3: Find Maximum Value',
+    description: 'Write a method to find and return the maximum value in a BST.',
+    template: `public int findMax(Node root) {
+    // Your code here
+    
+    
+    
+}`,
+    solution: `public int findMax(Node root) {
+    // Keep going right until you can't anymore
+    if (root == null) {
+        throw new IllegalArgumentException("Tree is empty");
+    }
+    
+    while (root.right != null) {
+        root = root.right;
+    }
+    
+    return root.data;
+}`,
+    hints: [
+      'In a BST, the maximum is always the rightmost node',
+      'Keep going right until right child is null',
+      'Very similar to findMin, just go right instead of left',
+      'Handle empty tree edge case'
+    ],
+    validate: (code) => {
+      const checks = [
+        {test: code.includes('right'), msg: 'Must traverse to the right'},
+        {test: code.includes('while') || code.includes('if'), msg: 'Need loop or recursion'},
+        {test: code.includes('return'), msg: 'Must return the maximum value'},
+        {test: code.includes('null'), msg: 'Handle null/empty tree case'}
+      ];
+      return checks;
+    }
+  },
+  countNodes: {
+    title: 'Challenge 4: Count Total Nodes',
+    description: 'Write a recursive method to count the total number of nodes in a BST.',
+    template: `public int countNodes(Node root) {
+    // Your code here
+    
+    
+    
+}`,
+    solution: `public int countNodes(Node root) {
+    // Base case: empty tree has 0 nodes
+    if (root == null) {
+        return 0;
+    }
+    
+    // Count = 1 (current) + left subtree + right subtree
+    return 1 + countNodes(root.left) + countNodes(root.right);
+}`,
+    hints: [
+      'Use recursion - count nodes in left and right subtrees',
+      'Base case: if node is null, return 0',
+      'Formula: 1 (current node) + count(left) + count(right)',
+      'This is a classic recursive pattern'
+    ],
+    validate: (code) => {
+      const checks = [
+        {test: code.includes('null') && code.includes('return'), msg: 'Handle base case (null)'},
+        {test: code.includes('countNodes'), msg: 'Use recursive calls'},
+        {test: code.includes('left') && code.includes('right'), msg: 'Count both left and right subtrees'},
+        {test: code.includes('1') || code.includes('+'), msg: 'Add 1 for current node'}
+      ];
+      return checks;
+    }
+  },
+  height: {
+    title: 'Challenge 5: Calculate Tree Height',
+    description: 'Write a method to calculate the height of the BST (number of edges in longest path from root to leaf).',
+    template: `public int height(Node root) {
+    // Your code here
+    
+    
+    
+}`,
+    solution: `public int height(Node root) {
+    // Base case: empty tree has height -1
+    // (or 0 if you count nodes instead of edges)
+    if (root == null) {
+        return -1;
+    }
+    
+    // Height = 1 + max(left height, right height)
+    int leftHeight = height(root.left);
+    int rightHeight = height(root.right);
+    
+    return 1 + Math.max(leftHeight, rightHeight);
+}`,
+    hints: [
+      'Use recursion to find height of left and right subtrees',
+      'Base case: empty tree has height -1 (or 0 if counting nodes)',
+      'Height = 1 + max(left height, right height)',
+      'Use Math.max() to find the larger of two heights'
+    ],
+    validate: (code) => {
+      const checks = [
+        {test: code.includes('null'), msg: 'Handle base case (null node)'},
+        {test: code.includes('height'), msg: 'Use recursive calls'},
+        {test: code.includes('max') || code.includes('Math'), msg: 'Find maximum of left and right heights'},
+        {test: code.includes('1') || code.includes('+'), msg: 'Add 1 to the max height'}
+      ];
+      return checks;
+    }
+  },
+  isValidBST: {
+    title: 'Challenge 6: Validate BST',
+    description: 'Write a method to check if a binary tree is a valid BST. Every node must satisfy: left < node < right.',
+    template: `public boolean isValidBST(Node root) {
+    return isValidBSTHelper(root, Integer.MIN_VALUE, Integer.MAX_VALUE);
+}
+
+private boolean isValidBSTHelper(Node node, int min, int max) {
+    // Your code here
+    
+    
+    
+}`,
+    solution: `public boolean isValidBST(Node root) {
+    return isValidBSTHelper(root, Integer.MIN_VALUE, Integer.MAX_VALUE);
+}
+
+private boolean isValidBSTHelper(Node node, int min, int max) {
+    // Empty tree is valid
+    if (node == null) {
+        return true;
+    }
+    
+    // Current node must be within range [min, max]
+    if (node.data <= min || node.data >= max) {
+        return false;
+    }
+    
+    // Check left subtree (all values must be < current)
+    // and right subtree (all values must be > current)
+    return isValidBSTHelper(node.left, min, node.data) &&
+           isValidBSTHelper(node.right, node.data, max);
+}`,
+    hints: [
+      'Not enough to just check node.left < node < node.right',
+      'Use a helper method that tracks valid range [min, max]',
+      'For left subtree: range is [min, current.data]',
+      'For right subtree: range is [current.data, max]',
+      'Start with range [Integer.MIN_VALUE, Integer.MAX_VALUE]'
+    ],
+    validate: (code) => {
+      const checks = [
+        {test: code.includes('min') && code.includes('max'), msg: 'Track min and max range'},
+        {test: code.includes('null'), msg: 'Handle base case'},
+        {test: code.includes('&&') || code.includes('and'), msg: 'Both subtrees must be valid'},
+        {test: code.toLowerCase().includes('helper') || code.includes('isvalid'), msg: 'Use recursive validation'}
+      ];
+      return checks;
+    }
+  }
+};
+
+function loadChallenge(challengeId) {
+  currentChallenge = challengeId;
+  const challenge = challenges[challengeId];
+  
+  // Update UI
+  document.getElementById('current-challenge-title').textContent = challenge.title;
+  document.getElementById('current-challenge-desc').textContent = challenge.description;
+  document.getElementById('code-editor').value = challenge.template;
+  
+  // Clear feedback and solution
+  document.getElementById('code-feedback').className = 'feedback';
+  document.getElementById('code-solution').classList.remove('show');
+  
+  // Highlight active challenge card
+  document.querySelectorAll('.challenge-card').forEach(card => {
+    card.classList.remove('active');
+  });
+  event.target.closest('.challenge-card').classList.add('active');
+}
+
+function runCodeChallenge() {
+  if (!currentChallenge) {
+    alert('Please select a challenge first!');
+    return;
+  }
+  
+  const code = document.getElementById('code-editor').value;
+  const challenge = challenges[currentChallenge];
+  const checks = challenge.validate(code);
+  
+  const passedChecks = checks.filter(c => c.test);
+  const failedChecks = checks.filter(c => !c.test);
+  
+  const feedback = document.getElementById('code-feedback');
+  
+  if (failedChecks.length === 0) {
+    feedback.className = 'feedback success';
+    feedback.innerHTML = `
+      <strong>✓ Great job!</strong> Your code passes all validation checks.<br>
+      <small>Tip: ${challenge.hints[0]}</small>
+    `;
+  } else {
+    feedback.className = 'feedback error';
+    feedback.innerHTML = `
+      <strong>Code needs improvement:</strong><br>
+      ${failedChecks.map(c => '• ' + c.msg).join('<br>')}
+      <br><br><strong>Hint:</strong> ${challenge.hints[Math.min(failedChecks.length - 1, challenge.hints.length - 1)]}
+    `;
+  }
+}
+
+function showChallengeSolution() {
+  if (!currentChallenge) {
+    alert('Please select a challenge first!');
+    return;
+  }
+  
+  const solutionDiv = document.getElementById('code-solution');
+  const challenge = challenges[currentChallenge];
+  
+  solutionDiv.innerHTML = `
+    <strong>Solution:</strong>
+    <pre style="margin: 8px 0; padding: 12px; background: #2d2d2a; color: #c2c0b6; border-radius: 6px; overflow-x: auto;">${challenge.solution}</pre>
+  `;
+  solutionDiv.classList.toggle('show');
+}
+
+function clearCode() {
+  if (currentChallenge) {
+    document.getElementById('code-editor').value = challenges[currentChallenge].template;
+    document.getElementById('code-feedback').className = 'feedback';
+    document.getElementById('code-solution').classList.remove('show');
+  }
+}
+
+// ===== INITIALIZE =====
+window.onload = function() {
+  resetDeleteTree();
+  generateTraversalTree('medium');
+};
+</script>
+
+</body>
+</html>

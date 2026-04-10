@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>COMP 2080 Data Structures - Complete Study Guide</title>
+<style>
+* { box-sizing: border-box; }
+body { 
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+  max-width: 1400px; 
+  margin: 0 auto; 
+  padding: 40px 20px; 
+  background: #fafaf9;
+  line-height: 1.6;
+}
+.header { 
+  background: linear-gradient(135deg, #378ADD 0%, #1D9E75 100%); 
+  color: white; 
+  padding: 40px; 
+  border-radius: 16px; 
+  margin-bottom: 32px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.header h1 { margin: 0 0 8px 0; font-size: 32px; }
+.header .subtitle { opacity: 0.95; font-size: 16px; margin: 0; }
+.nav { 
+  background: white; 
+  padding: 20px; 
+  border-radius: 12px; 
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 20px;
+  z-index: 100;
+}
+.nav h3 { margin: 0 0 12px 0; color: #2d2d2a; font-size: 18px; }
+.nav-links { display: flex; gap: 12px; flex-wrap: wrap; }
+.nav-link { 
+  padding: 8px 16px; 
+  background: #e8e7e1; 
+  border-radius: 6px; 
+  text-decoration: none; 
+  color: #3d3d3a;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.nav-link:hover { background: #378ADD; color: white; transform: translateY(-1px); }
+.section { 
+  background: white; 
+  border-radius: 12px; 
+  padding: 32px; 
+  margin-bottom: 32px; 
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  scroll-margin-top: 100px;
+}
+h2 { 
+  color: #2d2d2a; 
+  margin-top: 0; 
+  font-size: 28px;
+  border-bottom: 2px solid #e8e7e1;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+}
+h3 { color: #3d3d3a; font-size: 20px; margin-top: 24px; }
+.subtitle-text { color: #73726c; font-size: 15px; margin-bottom: 24px; }
+.btn-group { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+button { 
+  padding: 10px 20px; 
+  border: none; 
+  border-radius: 8px; 
+  background: #e8e7e1; 
+  cursor: pointer; 
+  font-size: 14px; 
+  font-weight: 500; 
+  transition: all 0.2s;
+  color: #3d3d3a;
+}
+button:hover { background: #d3d2cc; transform: translateY(-1px); }
+button.active { background: #378ADD; color: white; }
+button:disabled { opacity: 0.4; cursor: not-allowed; }
+canvas { 
+  border: 1px solid #d3d1c7; 
+  border-radius: 8px; 
+  background: white; 
+  display: block; 
+  margin: 20px auto;
+  max-width: 100%;
+}
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 20px; }
+.card { 
+  background: #f5f4f0; 
+  padding: 20px; 
+  border-radius: 8px; 
+  border: 1px solid #d3d1c7;
+}
+.card h4 { margin-top: 0; color: #3d3d3a; font-size: 16px; }
+.explanation { 
+  background: #e6f1fb; 
+  padding: 16px; 
+  border-radius: 8px; 
+  margin-top: 20px; 
+  color: #0c447c; 
+  line-height: 1.7;
+}
+.step { 
+  background: #f5f4f0; 
+  padding: 12px 16px; 
+  border-radius: 6px; 
+  margin: 8px 0; 
+  border-left: 3px solid #378ADD;
+  font-size: 14px;
+}
+.output { 
+  font-family: 'Courier New', monospace; 
+  background: #2d2d2a; 
+  color: #c2c0b6; 
+  padding: 16px; 
+  border-radius: 6px; 
+  margin-top: 12px;
+  font-size: 14px;
+}
+table { 
+  width: 100%; 
+  border-collapse: collapse; 
+  margin-top: 16px;
+  font-size: 14px;
+}
+th, td { 
+  border: 1px solid #d3d1c7; 
+  padding: 10px; 
+  text-align: center; 
+}
+th { 
+  background: #e8e7e1; 
+  font-weight: 500; 
+  color: #3d3d3a;
+}
+.key-point { 
+  background: #f0f9e9; 
+  border-left: 4px solid #639922; 
+  padding: 16px; 
+  margin: 16px 0;
+  border-radius: 4px;
+}
+.key-point strong { color: #3b6d11; }
+.warning { 
+  background: #fef3e6; 
+  border-left: 4px solid #BA7517; 
+  padding: 16px; 
+  margin: 16px 0;
+  border-radius: 4px;
+}
+.warning strong { color: #854F0B; }
+.sequence-display {
+  background: #f5f4f0;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+.sequence-display .label {
+  font-size: 13px;
+  color: #5f5e5a;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+.sequence-display .values {
+  font-size: 18px;
+  color: #2d2d2a;
+  font-family: 'Courier New', monospace;
+}
+@media (max-width: 768px) {
+  .grid { grid-template-columns: 1fr; }
+  .nav { position: relative; top: 0; }
+  body { padding: 20px 10px; }
+  .section { padding: 20px; }
+}
+@media print {
+  .nav { display: none; }
+  .section { page-break-inside: avoid; }
+  button { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+<h1>COMP 2080 Data Structures - Complete Study Guide</h1>
+<p class="subtitle">Binary Search Trees & Graph Traversals | Exam Preparation Guide</p>
+</div>
+
+<nav class="nav">
+<h3>Quick Navigation</h3>
+<div class="nav-links">
+<a href="#bst-structure" class="nav-link">BST Structure</a>
+<a href="#bst-insertion" class="nav-link">BST Insertion</a>
+<a href="#bst-traversals" class="nav-link">BST Traversals</a>
+<a href="#bst-deletion" class="nav-link">BST Deletion</a>
+<a href="#graph-types" class="nav-link">Graph Types</a>
+<a href="#dfs" class="nav-link">DFS</a>
+<a href="#bfs" class="nav-link">BFS</a>
+</div>
+</nav>
+
+<!-- BST STRUCTURE -->
+<section id="bst-structure" class="section">
+<h2>Binary Search Tree (BST) Structure</h2>
+<p class="subtitle-text">Understanding the fundamental properties and terminology</p>
+
+<div class="key-point">
+<strong>BST Property:</strong> For every node:
+<ul style="margin: 8px 0;">
+<li>All values in the <strong>left subtree</strong> are <strong>less than</strong> the node's value</li>
+<li>All values in the <strong>right subtree</strong> are <strong>greater than</strong> the node's value</li>
+</ul>
+</div>
+
+<canvas id="bst-structure-canvas" width="700" height="380"></canvas>
+
+<div class="grid">
+<div class="card">
+<h4>Key Terminology</h4>
+<ul style="margin: 8px 0; line-height: 1.8;">
+<li><strong>Root:</strong> Topmost node, has no parent</li>
+<li><strong>Parent:</strong> Node with children below it</li>
+<li><strong>Child:</strong> Node with a parent above it</li>
+<li><strong>Leaf:</strong> Node with no children (0 children)</li>
+<li><strong>Subtree:</strong> Tree formed by a node and its descendants</li>
+</ul>
+</div>
+
+<div class="card">
+<h4>Node Relationships</h4>
+<ul style="margin: 8px 0; line-height: 1.8;">
+<li><strong>Every node (except root)</strong> has exactly 1 parent</li>
+<li><strong>Each node</strong> can have 0, 1, or 2 children</li>
+<li><strong>Left child:</strong> value &lt; parent</li>
+<li><strong>Right child:</strong> value &gt; parent</li>
+<li><strong>No duplicates</strong> are stored in BST</li>
+</ul>
+</div>
+</div>
+</section>
+
+<!-- BST INSERTION -->
+<section id="bst-insertion" class="section">
+<h2>BST Insertion Process</h2>
+<p class="subtitle-text">Step-by-step guide to inserting values into a Binary Search Tree</p>
+
+<div class="sequence-display">
+<div class="label">Insertion Sequence:</div>
+<div class="values" id="insert-sequence">50, 20, 90, 19, 41</div>
+</div>
+
+<div class="btn-group">
+<button class="active" onclick="showInsertStep(0)">Start (Empty)</button>
+<button onclick="showInsertStep(1)">Insert 50</button>
+<button onclick="showInsertStep(2)">Insert 20</button>
+<button onclick="showInsertStep(3)">Insert 90</button>
+<button onclick="showInsertStep(4)">Insert 19</button>
+<button onclick="showInsertStep(5)">Insert 41</button>
+</div>
+
+<canvas id="insert-canvas" width="700" height="420"></canvas>
+
+<div class="explanation" id="insert-explanation">
+<strong>Starting with empty tree</strong>
+<div class="step">The tree is empty. Ready to insert the first node.</div>
+</div>
+
+<div class="key-point">
+<strong>Insertion Algorithm:</strong>
+<ol style="margin: 8px 0;">
+<li>Always <strong>start at the root</strong></li>
+<li><strong>Compare</strong> value with current node:
+  <ul><li>If value &lt; current → go left</li>
+  <li>If value &gt; current → go right</li></ul>
+</li>
+<li>Insert at the <strong>first null position</strong> you encounter</li>
+<li>Insert values in the <strong>exact order given</strong></li>
+</ol>
+</div>
+</section>
+
+<!-- BST TRAVERSALS -->
+<section id="bst-traversals" class="section">
+<h2>BST Traversal Methods</h2>
+<p class="subtitle-text">Different ways to visit all nodes in a Binary Search Tree</p>
+
+<div class="btn-group">
+<button class="active" onclick="showTraversal('inorder')">In-order</button>
+<button onclick="showTraversal('preorder')">Pre-order</button>
+<button onclick="showTraversal('postorder')">Post-order</button>
+<button onclick="showTraversal('level')">Level-order</button>
+</div>
+
+<canvas id="traversal-canvas" width="700" height="420"></canvas>
+
+<div class="explanation" id="traversal-explanation">
+<strong>In-order Traversal: Left → Root → Right</strong>
+<div class="output">Visit order: 1 → 2 → 3 → 4 → 5<br>Result: 19, 20, 41, 50, 90</div>
+<div class="step">Visits nodes in <strong>sorted (ascending) order</strong></div>
+<div class="step">Most commonly used for BST</div>
+</div>
+
+<div class="grid" style="margin-top: 24px;">
+<div class="card">
+<h4>In-order (Left → Root → Right)</h4>
+<p style="margin: 8px 0; color: #5f5e5a;">Result: <strong>19, 20, 41, 50, 90</strong></p>
+<p style="margin: 8px 0; font-size: 13px;">✓ Produces sorted output for BST</p>
+</div>
+
+<div class="card">
+<h4>Pre-order (Root → Left → Right)</h4>
+<p style="margin: 8px 0; color: #5f5e5a;">Result: <strong>50, 20, 19, 41, 90</strong></p>
+<p style="margin: 8px 0; font-size: 13px;">✓ Root processed first (copying tree)</p>
+</div>
+
+<div class="card">
+<h4>Post-order (Left → Right → Root)</h4>
+<p style="margin: 8px 0; color: #5f5e5a;">Result: <strong>19, 41, 20, 90, 50</strong></p>
+<p style="margin: 8px 0; font-size: 13px;">✓ Root processed last (deleting tree)</p>
+</div>
+
+<div class="card">
+<h4>Level-order (Breadth-first)</h4>
+<p style="margin: 8px 0; color: #5f5e5a;">Result: <strong>50, 20, 90, 19, 41</strong></p>
+<p style="margin: 8px 0; font-size: 13px;">✓ Uses queue, processes level by level</p>
+</div>
+</div>
+</section>
+
+<!-- BST DELETION -->
+<section id="bst-deletion" class="section">
+<h2>BST Deletion Cases</h2>
+<p class="subtitle-text">Three different scenarios when deleting a node from a BST</p>
+
+<div class="btn-group">
+<button class="active" onclick="showDeleteCase(0)">Case 1: Leaf (0 children)</button>
+<button onclick="showDeleteCase(1)">Case 2: 1 Child</button>
+<button onclick="showDeleteCase(2)">Case 3: 2 Children</button>
+</div>
+
+<canvas id="delete-canvas" width="700" height="460"></canvas>
+
+<div class="explanation" id="delete-explanation">
+<strong>Case 1: Deleting a Leaf Node (0 children)</strong>
+<div class="step">Node has no children</div>
+<div class="step">Simply set parent's link to null</div>
+<div class="step">This is the simplest case - no reconnection needed</div>
+</div>
+
+<div class="grid" style="margin-top: 24px;">
+<div class="card">
+<h4>Case 1: No Children (Leaf)</h4>
+<p style="margin: 8px 0; font-size: 14px;">Simply remove the node by setting parent's pointer to null</p>
+</div>
+
+<div class="card">
+<h4>Case 2: One Child</h4>
+<p style="margin: 8px 0; font-size: 14px;">Connect parent directly to the single child (bypass the deleted node)</p>
+</div>
+
+<div class="card">
+<h4>Case 3: Two Children</h4>
+<p style="margin: 8px 0; font-size: 14px;">Replace with in-order successor: go right once, then all the way left</p>
+</div>
+
+<div class="card">
+<h4>Alternative for Case 3</h4>
+<p style="margin: 8px 0; font-size: 14px;">Can also use in-order predecessor: go left once, then all the way right</p>
+</div>
+</div>
+</section>
+
+<!-- GRAPH TYPES -->
+<section id="graph-types" class="section">
+<h2>Graph Types & Adjacency Matrices</h2>
+<p class="subtitle-text">Understanding different graph representations</p>
+
+<div class="btn-group">
+<button class="active" onclick="showGraphType(0)">Undirected Unweighted</button>
+<button onclick="showGraphType(1)">Directed Unweighted</button>
+<button onclick="showGraphType(2)">Undirected Weighted</button>
+<button onclick="showGraphType(3)">Directed Weighted</button>
+</div>
+
+<div class="grid">
+<div style="background: #f5f4f0; padding: 20px; border-radius: 8px;">
+<h4 style="margin-top: 0;">Graph Visualization</h4>
+<canvas id="graph-canvas" width="320" height="280"></canvas>
+</div>
+
+<div style="background: #f5f4f0; padding: 20px; border-radius: 8px;">
+<h4 style="margin-top: 0;">Adjacency Matrix</h4>
+<table id="graph-matrix">
+<tr><th></th><th>a</th><th>k</th><th>g</th><th>b</th></tr>
+<tr><th>a</th><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+<tr><th>k</th><td>1</td><td>0</td><td>1</td><td>1</td></tr>
+<tr><th>g</th><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+<tr><th>b</th><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+</table>
+<p id="graph-desc" style="margin-top: 12px; font-size: 13px; color: #5f5e5a;">
+Matrix is <strong>symmetric</strong>. 1 = edge exists, 0 = no edge.
+</p>
+</div>
+</div>
+
+<div class="key-point" style="margin-top: 24px;">
+<strong>Key Matrix Properties:</strong>
+<ul style="margin: 8px 0;">
+<li><strong>Undirected graphs:</strong> Matrix is symmetric (row i,j = row j,i)</li>
+<li><strong>Directed graphs:</strong> Matrix is NOT symmetric</li>
+<li><strong>Unweighted:</strong> Use 1 for edge exists, 0 or ∞ for no edge</li>
+<li><strong>Weighted:</strong> Use actual weight values, ∞ for no edge</li>
+<li><strong>Diagonal:</strong> Always 0 (no self-loops)</li>
+<li><strong>Order:</strong> Matrix must be in alphabetical order</li>
+</ul>
+</div>
+</section>
+
+<!-- DFS -->
+<section id="dfs" class="section">
+<h2>Depth-First Search (DFS)</h2>
+<p class="subtitle-text">Goes as deep as possible before backtracking - uses a stack</p>
+
+<div class="warning">
+<strong>Important:</strong> When processing edges, follow the order specified in the question:
+<ul style="margin: 8px 0;">
+<li><strong>Alphabetical order</strong> (most common)</li>
+<li><strong>Decreasing weight order</strong> (for weighted graphs)</li>
+</ul>
+</div>
+
+<div class="btn-group">
+<button class="active" onclick="showDFSStep(0)">Start at A</button>
+<button onclick="showDFSStep(1)">Visit F</button>
+<button onclick="showDFSStep(2)">Visit D</button>
+<button onclick="showDFSStep(3)">Visit E</button>
+<button onclick="showDFSStep(4)">Visit C</button>
+<button onclick="showDFSStep(5)">Visit B</button>
+<button onclick="showDFSStep(6)">Complete</button>
+</div>
+
+<canvas id="dfs-canvas" width="700" height="420"></canvas>
+
+<div class="explanation" id="dfs-explanation">
+<strong>DFS Algorithm:</strong>
+<div class="step">1. Start at vertex A, mark as visited</div>
+<div class="step">2. Process edges in decreasing weight order: F(75) is highest</div>
+<div class="step">3. Visit F, then continue to next highest unvisited neighbor</div>
+<div class="step">4. Continue until all reachable vertices are visited</div>
+<div class="output" id="dfs-output">Output: A F D E C B</div>
+</div>
+
+<div class="key-point">
+<strong>DFS Characteristics:</strong>
+<ul style="margin: 8px 0;">
+<li>Uses a <strong>stack</strong> (or recursion)</li>
+<li>Goes <strong>deep</strong> before exploring siblings</li>
+<li>Time complexity: <strong>O(V + E)</strong></li>
+<li>Space complexity: <strong>O(V)</strong> for visited array</li>
+</ul>
+</div>
+</section>
+
+<!-- BFS -->
+<section id="bfs" class="section">
+<h2>Breadth-First Search (BFS)</h2>
+<p class="subtitle-text">Visits all neighbors at current level before moving deeper - uses a queue</p>
+
+<div class="warning">
+<strong>Important:</strong> Process neighbors in <strong>alphabetical order</strong> when adding to queue.
+</div>
+
+<div class="btn-group">
+<button class="active" onclick="showBFSStep(0)">Start at C</button>
+<button onclick="showBFSStep(1)">Level 1: A,B,E</button>
+<button onclick="showBFSStep(2)">Level 2: G</button>
+<button onclick="showBFSStep(3)">Level 2: F,D</button>
+<button onclick="showBFSStep(4)">Complete</button>
+</div>
+
+<canvas id="bfs-canvas" width="700" height="420"></canvas>
+
+<div class="explanation" id="bfs-explanation">
+<strong>BFS Algorithm:</strong>
+<div class="step">1. Add starting vertex C to queue</div>
+<div class="step">2. Dequeue C, visit it, add all neighbors (A,B,E) in alphabetical order</div>
+<div class="step">3. Dequeue A, visit it, add unvisited neighbors to queue</div>
+<div class="step">4. Continue until queue is empty</div>
+<div class="output" id="bfs-output">Queue: [C]<br>Output: C A B E G F D</div>
+</div>
+
+<div class="key-point">
+<strong>BFS Characteristics:</strong>
+<ul style="margin: 8px 0;">
+<li>Uses a <strong>queue</strong></li>
+<li>Visits level by level (<strong>breadth-first</strong>)</li>
+<li>Finds <strong>shortest path</strong> in unweighted graphs</li>
+<li>Time complexity: <strong>O(V + E)</strong></li>
+<li>Space complexity: <strong>O(V)</strong> for queue</li>
+</ul>
+</div>
+</section>
+
+<div class="section" style="background: linear-gradient(135deg, #378ADD 0%, #1D9E75 100%); color: white;">
+<h2 style="color: white; border-bottom-color: rgba(255,255,255,0.3);">Exam Tips</h2>
+<ul style="line-height: 2;">
+<li><strong>BST Insertion:</strong> Always insert in the exact order given, start at root for each insertion</li>
+<li><strong>BST Traversals:</strong> In-order gives sorted output, memorize the patterns</li>
+<li><strong>BST Deletion:</strong> Know all 3 cases, practice finding in-order successor</li>
+<li><strong>Adjacency Matrix:</strong> Must be in alphabetical order, know symmetric vs non-symmetric</li>
+<li><strong>DFS:</strong> Stack-based, process edges as specified (alphabetical or by weight)</li>
+<li><strong>BFS:</strong> Queue-based, always process neighbors in alphabetical order</li>
+<li><strong>Practice:</strong> Work through examples step-by-step, draw diagrams</li>
+</ul>
+</div>
+
+<script>
+// ===== BST STRUCTURE =====
+function drawBSTStructure() {
+  const canvas = document.getElementById('bst-structure-canvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  const nodes = {
+    56: [350, 70],
+    25: [230, 170],
+    168: [470, 170],
+    34: [150, 270],
+  };
+  
+  // Draw edges
+  ctx.strokeStyle = '#3d3d3a';
+  ctx.lineWidth = 2;
+  [[350,70,230,170], [350,70,470,170], [230,170,150,270]].forEach(([x1,y1,x2,y2]) => {
+    ctx.beginPath();
+    ctx.moveTo(x1,y1);
+    ctx.lineTo(x2,y2);
+    ctx.stroke();
+  });
+  
+  // Draw nodes
+  Object.entries(nodes).forEach(([val, [x, y]]) => {
+    const color = val == 56 ? '#AFA9EC' : val == 25 || val == 168 ? '#5DCAA5' : '#F0997B';
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(x, y, 32, 0, 2*Math.PI);
+    ctx.fill();
+    ctx.stroke();
+    
+    ctx.fillStyle = val == 56 ? '#3C3489' : val == 25 || val == 168 ? '#0F6E56' : '#993C1D';
+    ctx.font = 'bold 18px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(val, x, y);
+  });
+  
+  // Labels
+  ctx.fillStyle = '#5f5e5a';
+  ctx.font = '14px sans-serif';
+  ctx.fillText('Root', 350, 40);
+  ctx.fillText('Left child (< 56)', 230, 220);
+  ctx.fillText('Right child (> 56)', 470, 220);
+  ctx.fillText('Leaf node', 150, 320);
+}
+
+// ===== BST INSERTION =====
+const insertSteps = [
+  { nodes: {}, desc: 'The tree is empty. Ready to insert the first node.', highlight: null },
+  { nodes: {50:[350,100]}, desc: 'Insert 50 as the root (tree was empty)', highlight: 50 },
+  { nodes: {50:[350,100], 20:[240,200]}, desc: '20 < 50 → go left, insert as left child of 50', highlight: 20 },
+  { nodes: {50:[350,100], 20:[240,200], 90:[460,200]}, desc: '90 > 50 → go right, insert as right child of 50', highlight: 90 },
+  { nodes: {50:[350,100], 20:[240,200], 90:[460,200], 19:[180,300]}, desc: '19 < 50 → left, 19 < 20 → left, insert as left child of 20', highlight: 19 },
+  { nodes: {50:[350,100], 20:[240,200], 90:[460,200], 19:[180,300], 41:[300,300]}, desc: '41 < 50 → left, 41 > 20 → right, insert as right child of 20', highlight: 41 }
+];
+
+function showInsertStep(step) {
+  const btns = document.querySelectorAll('#bst-insertion .btn-group button');
+  btns.forEach((btn, i) => btn.classList.toggle('active', i === step));
+  
+  const canvas = document.getElementById('insert-canvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  const data = insertSteps[step];
+  const nodes = data.nodes;
+  
+  // Draw edges
+  ctx.strokeStyle = '#b4b2a9';
+  ctx.lineWidth = 2.5;
+  if (nodes[50] && nodes[20]) { ctx.beginPath(); ctx.moveTo(350,100); ctx.lineTo(240,200); ctx.stroke(); }
+  if (nodes[50] && nodes[90]) { ctx.beginPath(); ctx.moveTo(350,100); ctx.lineTo(460,200); ctx.stroke(); }
+  if (nodes[20] && nodes[19]) { ctx.beginPath(); ctx.moveTo(240,200); ctx.lineTo(180,300); ctx.stroke(); }
+  if (nodes[20] && nodes[41]) { ctx.beginPath(); ctx.moveTo(240,200); ctx.lineTo(300,300); ctx.stroke(); }
+  
+  // Draw nodes
+  Object.entries(nodes).forEach(([val, [x, y]]) => {
+    const isHighlight = parseInt(val) === data.highlight;
+    ctx.fillStyle = isHighlight ? '#1D9E75' : '#85B7EB';
+    ctx.strokeStyle = '#3d3d3a';
+    ctx.lineWidth = isHighlight ? 3 : 1.5;
+    ctx.beginPath();
+    ctx.arc(x, y, 32, 0, 2*Math.PI);
+    ctx.fill();
+    ctx.stroke();
+    
+    ctx.fillStyle = isHighlight ? 'white' : '#0c447c';
+    ctx.font = 'bold 18px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(val, x, y);
+  });
+  
+  // Update explanation
+  const sequences = [
+    '50, 20, 90, 19, 41',
+    '<strong style="color: #1D9E75">50</strong>, 20, 90, 19, 41',
+    '50, <strong style="color: #1D9E75">20</strong>, 90, 19, 41',
+    '50, 20, <strong style="color: #1D9E75">90</strong>, 19, 41',
+    '50, 20, 90, <strong style="color: #1D9E75">19</strong>, 41',
+    '50, 20, 90, 19, <strong style="color: #1D9E75">41</strong>'
+  ];
+  document.getElementById('insert-sequence').innerHTML = sequences[step];
+  
+  document.getElementById('insert-explanation').innerHTML = 
+    '<strong>Step ' + step + '</strong>' +
+    '<div class="step">' + data.desc + '</div>';
+}
+
+// ===== BST TRAVERSALS =====
+const traversalData = {
+  inorder: {
+    order: {19:1, 20:2, 41:3, 50:4, 90:5},
+    result: '19, 20, 41, 50, 90',
+    title: 'In-order Traversal: Left → Root → Right',
+    desc: 'Visits nodes in <strong>sorted (ascending) order</strong>',
+    note: 'Most commonly used for BST'
+  },
+  preorder: {
+    order: {50:1, 20:2, 19:3, 41:4, 90:5},
+    result: '50, 20, 19, 41, 90',
+    title: 'Pre-order Traversal: Root → Left → Right',
+    desc: 'Root processed <strong>first</strong>',
+    note: 'Useful for copying tree structure'
+  },
+  postorder: {
+    order: {19:1, 41:2, 20:3, 90:4, 50:5},
+    result: '19, 41, 20, 90, 50',
+    title: 'Post-order Traversal: Left → Right → Root',
+    desc: 'Root processed <strong>last</strong>',
+    note: 'Useful for deleting tree'
+  },
+  level: {
+    order: {50:1, 20:2, 90:3, 19:4, 41:5},
+    result: '50, 20, 90, 19, 41',
+    title: 'Level-order Traversal: Breadth-first',
+    desc: 'Uses a <strong>queue</strong>, processes level by level',
+    note: 'Same order as insertion sequence'
+  }
+};
+
+function showTraversal(type) {
+  const btns = document.querySelectorAll('#bst-traversals .btn-group button');
+  btns.forEach(btn => {
+    btn.classList.toggle('active', btn.textContent.toLowerCase().includes(type.replace('level', 'level-order')));
+  });
+  
+  const canvas = document.getElementById('traversal-canvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  const nodes = {
+    50: [350, 80],
+    20: [240, 190],
+    90: [460, 190],
+    19: [180, 300],
+    41: [300, 300]
+  };
+  
+  const data = traversalData[type];
+  
+  // Draw edges
+  ctx.strokeStyle = '#b4b2a9';
+  ctx.lineWidth = 2.5;
+  [[350,80,240,190], [350,80,460,190], [240,190,180,300], [240,190,300,300]].forEach(([x1,y1,x2,y2]) => {
+    ctx.beginPath();
+    ctx.moveTo(x1,y1);
+    ctx.lineTo(x2,y2);
+    ctx.stroke();
+  });
+  
+  // Draw nodes with visit numbers
+  Object.entries(nodes).forEach(([val, [x, y]]) => {
+    ctx.fillStyle = '#85B7EB';
+    ctx.strokeStyle = '#3d3d3a';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(x, y, 32, 0, 2*Math.PI);
+    ctx.fill();
+    ctx.stroke();
+    
+    // Visit order number (small, top)
+    ctx.fillStyle = '#0c447c';
+    ctx.font = 'bold 14px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(data.order[val], x, y - 8);
+    
+    // Node value (larger, bottom)
+    ctx.font = 'bold 18px sans-serif';
+    ctx.fillText(val, x, y + 8);
+  });
+  
+  // Update explanation
+  document.getElementById('traversal-explanation').innerHTML = 
+    '<strong>' + data.title + '</strong>' +
+    '<div class="output">Visit order: 1 → 2 → 3 → 4 → 5<br>Result: ' + data.result + '</div>' +
+    '<div class="step">' + data.desc + '</div>' +
+    '<div class="step">' + data.note + '</div>';
+}
+
+// ===== BST DELETION =====
+const deleteData = [
+  { // Case 0: leaf
+    nodes: {50:[350,80], 20:[240,190], 90:[460,190], 6:[180,300]},
+    deleted: 6,
+    edges: [[350,80,240,190], [350,80,460,190], [240,190,180,300]],
+    title: 'Case 1: Deleting a Leaf Node (0 children)',
+    steps: ['Node 6 has no children', 'Simply set parent\'s link to null', 'This is the simplest case - no reconnection needed']
+  },
+  { // Case 1: 1 child
+    nodes: {50:[350,80], 21:[240,190], 90:[460,190], 19:[180,300], 20:[180,380]},
+    deleted: 21,
+    replacement: 19,
+    edges: [[350,80,240,190], [350,80,460,190], [240,190,180,300], [180,300,180,380]],
+    newEdges: [[350,80,180,300]],
+    title: 'Case 2: Deleting Node with 1 Child',
+    steps: ['Node 21 has only one child (19)', 'Connect parent (50) directly to the child (19)', 'Bypass the deleted node']
+  },
+  { // Case 2: 2 children
+    nodes: {25:[350,80], 20:[240,190], 90:[460,190], 6:[180,300], 24:[300,300], 56:[520,300]},
+    deleted: 25,
+    successor: 56,
+    edges: [[350,80,240,190], [350,80,460,190], [240,190,180,300], [240,190,300,300], [460,190,520,300]],
+    title: 'Case 3: Deleting Node with 2 Children',
+    steps: ['Node 25 has two children (20 and 90)', 'Find in-order successor: go right to 90, then all left', 'In-order successor is 56 (rightmost of left subtree of 90)', 'Replace 25 with 56, then delete original 56 position']
+  }
+];
+
+function showDeleteCase(caseNum) {
+  const btns = document.querySelectorAll('#bst-deletion .btn-group button');
+  btns.forEach((btn, i) => btn.classList.toggle('active', i === caseNum));
+  
+  const canvas = document.getElementById('delete-canvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  const data = deleteData[caseNum];
+  
+  // Draw edges
+  ctx.strokeStyle = '#b4b2a9';
+  ctx.lineWidth = 2.5;
+  data.edges.forEach(([x1,y1,x2,y2]) => {
+    ctx.beginPath();
+    ctx.moveTo(x1,y1);
+    ctx.lineTo(x2,y2);
+    ctx.stroke();
+  });
+  
+  // Draw new edges for case 1
+  if (data.newEdges) {
+    ctx.strokeStyle = '#1D9E75';
+    ctx.lineWidth = 3;
+    ctx.setLineDash([5, 5]);
+    data.newEdges.forEach(([x1,y1,x2,y2]) => {
+      ctx.beginPath();
+      ctx.moveTo(x1,y1);
+      ctx.lineTo(x2,y2);
+      ctx.stroke();
+    });
+    ctx.setLineDash([]);
+  }
+  
+  // Draw nodes
+  Object.entries(data.nodes).forEach(([val, [x, y]]) => {
+    const isDeleted = parseInt(val) === data.deleted;
+    const isReplacement = parseInt(val) === data.replacement;
+    const isSuccessor = parseInt(val) === data.successor;
+    
+    ctx.fillStyle = isDeleted ? '#F09595' : (isReplacement || isSuccessor ? '#1D9E75' : '#85B7EB');
+    ctx.globalAlpha = isDeleted ? 0.4 : 1;
+    ctx.strokeStyle = '#3d3d3a';
+    ctx.lineWidth = (isReplacement || isSuccessor) ? 3 : 1.5;
+    ctx.beginPath();
+    ctx.arc(x, y, 32, 0, 2*Math.PI);
+    ctx.fill();
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+    
+    ctx.fillStyle = isDeleted ? '#A32D2D' : ((isReplacement || isSuccessor) ? 'white' : '#0c447c');
+    ctx.font = 'bold 18px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(val, x, y);
+    
+    // Labels
+    if (isSuccessor) {
+      ctx.fillStyle = '#0F6E56';
+      ctx.font = '13px sans-serif';
+      ctx.fillText('In-order successor', x, y - 50);
+    }
+  });
+  
+  // Update explanation
+  let html = '<strong>' + data.title + '</strong>';
+  data.steps.forEach(step => {
+    html += '<div class="step">' + step + '</div>';
+  });
+  document.getElementById('delete-explanation').innerHTML = html;
+}
+
+// ===== GRAPHS =====
+const graphMatrices = {
+  0: { // Undirected Unweighted
+    desc: 'Matrix is <strong>symmetric</strong>. 1 = edge exists, 0 = no edge.',
+    data: [['','a','k','g','b'],['a','0','1','1','0'],['k','1','0','1','1'],['g','1','1','0','0'],['b','0','1','0','0']],
+    edges: [[60,50,220,50], [60,50,60,170], [60,50,220,170], [220,50,220,170]],
+    weights: null,
+    directed: false
+  },
+  1: { // Directed Unweighted
+    desc: 'Matrix is <strong>NOT symmetric</strong>. 1 = edge from row to column.',
+    data: [['','a','k','g','b'],['a','0','1','0','0'],['k','0','0','1','1'],['g','0','0','0','0'],['b','0','0','0','0']],
+    edges: [[84,50,196,50], [60,74,60,146], [204,64,76,156]],
+    weights: null,
+    directed: true
+  },
+  2: { // Undirected Weighted
+    desc: 'Matrix is <strong>symmetric</strong>. Values = edge weights, ∞ = no edge.',
+    data: [['','a','k','g','b'],['a','0','50','10','∞'],['k','50','0','2','8'],['g','10','2','0','∞'],['b','∞','8','∞','0']],
+    edges: [[84,50,196,50], [60,74,60,146], [76,64,204,156], [204,64,76,156]],
+    weights: [[140,40,'50'], [50,112,'10'], [140,140,'2'], [140,180,'8']],
+    directed: false
+  },
+  3: { // Directed Weighted
+    desc: 'Matrix is <strong>NOT symmetric</strong>. Values = weight from row to column.',
+    data: [['','a','k','g','b'],['a','0','50','∞','∞'],['k','∞','0','2','13'],['g','8','2','0','∞'],['b','∞','∞','∞','0']],
+    edges: [[84,50,196,50], [60,74,60,146], [76,64,204,156], [204,64,76,156]],
+    weights: [[140,40,'50'], [50,112,'8'], [120,120,'2'], [140,180,'13']],
+    directed: true
+  }
+};
+
+function showGraphType(type) {
+  const btns = document.querySelectorAll('#graph-types .btn-group button');
+  btns.forEach((btn, i) => btn.classList.toggle('active', i === type));
+  
+  const canvas = document.getElementById('graph-canvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  const g = graphMatrices[type];
+  const nodes = {a:[60,50], k:[220,50], g:[60,170], b:[220,170]};
+  
+  // Draw edges
+  ctx.strokeStyle = '#3d3d3a';
+  ctx.lineWidth = 2;
+  
+  if (g.directed) {
+    g.edges.forEach((edge, i) => {
+      const [x1,y1,x2,y2] = edge;
+      const angle = Math.atan2(y2-y1, x2-x1);
+      const len = Math.sqrt((x2-x1)**2 + (y2-y1)**2);
+      const x2adj = x1 + (len - 24) * Math.cos(angle);
+      const y2adj = y1 + (len - 24) * Math.sin(angle);
+      
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2adj, y2adj);
+      ctx.stroke();
+      
+      // Arrow
+      ctx.beginPath();
+      ctx.moveTo(x2adj, y2adj);
+      ctx.lineTo(x2adj - 10*Math.cos(angle-0.3), y2adj - 10*Math.sin(angle-0.3));
+      ctx.moveTo(x2adj, y2adj);
+      ctx.lineTo(x2adj - 10*Math.cos(angle+0.3), y2adj - 10*Math.sin(angle+0.3));
+      ctx.stroke();
+      
+      // Weight
+      if (g.weights && g.weights[i]) {
+        ctx.fillStyle = '#639922';
+        ctx.font = 'bold 13px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(g.weights[i][2], g.weights[i][0], g.weights[i][1]);
+      }
+    });
+  } else {
+    g.edges.forEach((edge, i) => {
+      ctx.beginPath();
+      ctx.moveTo(edge[0], edge[1]);
+      ctx.lineTo(edge[2], edge[3]);
+      ctx.stroke();
+      
+      if (g.weights && g.weights[i]) {
+        ctx.fillStyle = '#639922';
+        ctx.font = 'bold 13px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(g.weights[i][2], g.weights[i][0], g.weights[i][1]);
+      }
+    });
+  }
+  
+  // Draw nodes
+  Object.entries(nodes).forEach(([label, [x, y]]) => {
+    ctx.fillStyle = '#85B7EB';
+    ctx.strokeStyle = '#3d3d3a';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(x, y, 24, 0, 2*Math.PI);
+    ctx.fill();
+    ctx.stroke();
+    
+    ctx.fillStyle = '#0c447c';
+    ctx.font = '16px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(label, x, y);
+  });
+  
+  // Update matrix
+  let html = '<table>';
+  g.data.forEach((row, i) => {
+    html += '<tr>';
+    row.forEach((cell, j) => {
+      html += (i === 0 || j === 0) ? '<th>' + cell + '</th>' : '<td>' + cell + '</td>';
+    });
+    html += '</tr>';
+  });
+  html += '</table>';
+  document.getElementById('graph-matrix').outerHTML = html;
+  
+  document.getElementById('graph-desc').innerHTML = g.desc;
+}
+
+// ===== DFS =====
+const dfsSteps = [
+  {visited: [], current: 'A', output: 'A', path: [], desc: 'Start at vertex A'},
+  {visited: ['A'], current: 'F', output: 'A F', path: [[350,50,250,320]], desc: 'From A, highest weight edge goes to F (75)'},
+  {visited: ['A','F'], current: 'D', output: 'A F D', path: [[350,50,250,320],[250,320,100,240]], desc: 'From F, go to D'},
+  {visited: ['A','F','D'], current: 'E', output: 'A F D E', path: [[350,50,250,320],[250,320,100,240],[250,320,300,240]], desc: 'From F, go to E'},
+  {visited: ['A','F','D','E'], current: 'C', output: 'A F D E C', path: [[350,50,250,320],[250,320,100,240],[250,320,300,240],[350,50,500,140]], desc: 'Backtrack to A, go to C'},
+  {visited: ['A','F','D','E','C'], current: 'B', output: 'A F D E C B', path: [[350,50,250,320],[250,320,100,240],[250,320,300,240],[350,50,500,140],[350,50,200,140]], desc: 'From A, go to B'},
+  {visited: ['A','F','D','E','C','B'], current: null, output: 'A F D E C B', path: [], desc: 'DFS complete - all vertices visited'}
+];
+
+function showDFSStep(step) {
+  const btns = document.querySelectorAll('#dfs .btn-group button');
+  btns.forEach((btn, i) => btn.classList.toggle('active', i === step));
+  
+  const canvas = document.getElementById('dfs-canvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  const nodes = {A:[350,50], B:[200,140], C:[500,140], D:[100,240], E:[300,240], F:[250,320], G:[450,320]};
+  const edges = [
+    ['A','B',25], ['A','C',45], ['B','C',10], ['B','D',50], ['B','E',60], ['B','F',55],
+    ['D','F',15], ['C','E',65], ['E','F',30], ['E','G',40], ['C','G',70], ['F','G',35]
+  ];
+  
+  // Special edge from A to F
+  const specialEdges = [['A','F',75]];
+  
+  const data = dfsSteps[step];
+  
+  // Draw all edges
+  ctx.strokeStyle = '#d3d1c7';
+  ctx.lineWidth = 2;
+  edges.forEach(([from, to, weight]) => {
+    const [x1, y1] = nodes[from];
+    const [x2, y2] = nodes[to];
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+    
+    ctx.fillStyle = '#888780';
+    ctx.font = '11px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(weight, (x1+x2)/2, (y1+y2)/2 - 5);
+  });
+  
+  // Draw special edge A-F
+  specialEdges.forEach(([from, to, weight]) => {
+    const [x1, y1] = nodes[from];
+    const [x2, y2] = nodes[to];
+    ctx.strokeStyle = '#d3d1c7';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+    
+    ctx.fillStyle = '#888780';
+    ctx.font = '11px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(weight, (x1+x2)/2 + 20, (y1+y2)/2);
+  });
+  
+  // Draw traversal path
+  if (data.path.length > 0) {
+    ctx.strokeStyle = '#EF9F27';
+    ctx.lineWidth = 3.5;
+    data.path.forEach(([x1,y1,x2,y2]) => {
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+    });
+  }
+  
+  // Draw nodes
+  Object.entries(nodes).forEach(([label, [x, y]]) => {
+    const isVisited = data.visited.includes(label);
+    const isCurrent = data.current === label;
+    
+    ctx.fillStyle = isVisited ? '#1D9E75' : (isCurrent ? '#F9CB42' : '#85B7EB');
+    ctx.strokeStyle = '#3d3d3a';
+    ctx.lineWidth = (isVisited || isCurrent) ? 3 : 1.5;
+    ctx.beginPath();
+    ctx.arc(x, y, 28, 0, 2*Math.PI);
+    ctx.fill();
+    ctx.stroke();
+    
+    ctx.fillStyle = isVisited ? 'white' : '#0c447c';
+    ctx.font = 'bold 18px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(label, x, y);
+  });
+  
+  // Update explanation
+  document.getElementById('dfs-explanation').innerHTML = 
+    '<strong>DFS Step ' + (step + 1) + '</strong>' +
+    '<div class="step">' + data.desc + '</div>';
+  
+  document.getElementById('dfs-output').textContent = 'Output: ' + data.output;
+}
+
+// ===== BFS =====
+const bfsSteps = [
+  {visited: [], queue: ['C'], output: '', current: 'C', desc: 'Start at C, add to queue'},
+  {visited: ['C'], queue: ['A','B','E'], output: 'C', current: null, desc: 'Visit C, add neighbors A,B,E (alphabetical)'},
+  {visited: ['C','A','B','E'], queue: ['G'], output: 'C A B E', current: null, desc: 'Process A,B,E, add G'},
+  {visited: ['C','A','B','E','G'], queue: ['F','D'], output: 'C A B E G', current: null, desc: 'Process G, add F,D'},
+  {visited: ['C','A','B','E','G','F','D'], queue: [], output: 'C A B E G F D', current: null, desc: 'Process F,D - BFS complete'}
+];
+
+function showBFSStep(step) {
+  const btns = document.querySelectorAll('#bfs .btn-group button');
+  btns.forEach((btn, i) => btn.classList.toggle('active', i === step));
+  
+  const canvas = document.getElementById('bfs-canvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  const nodes = {A:[350,50], B:[200,140], C:[500,140], D:[100,240], E:[300,240], F:[250,320], G:[450,320]};
+  const edges = [
+    ['A','B',25], ['A','C',45], ['B','C',10], ['B','D',50], ['B','E',60], ['B','F',55],
+    ['D','F',15], ['C','E',65], ['E','F',30], ['E','G',40], ['C','G',70], ['F','G',35]
+  ];
+  
+  const data = bfsSteps[step];
+  
+  // Draw edges
+  ctx.strokeStyle = '#d3d1c7';
+  ctx.lineWidth = 2;
+  edges.forEach(([from, to, weight]) => {
+    const [x1, y1] = nodes[from];
+    const [x2, y2] = nodes[to];
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+    
+    ctx.fillStyle = '#888780';
+    ctx.font = '11px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(weight, (x1+x2)/2, (y1+y2)/2 - 5);
+  });
+  
+  // Draw nodes
+  Object.entries(nodes).forEach(([label, [x, y]]) => {
+    const isVisited = data.visited.includes(label);
+    const inQueue = data.queue.includes(label);
+    
+    ctx.fillStyle = isVisited ? '#1D9E75' : (inQueue ? '#F9CB42' : '#85B7EB');
+    ctx.strokeStyle = '#3d3d3a';
+    ctx.lineWidth = (isVisited || inQueue) ? 3 : 1.5;
+    ctx.beginPath();
+    ctx.arc(x, y, 28, 0, 2*Math.PI);
+    ctx.fill();
+    ctx.stroke();
+    
+    ctx.fillStyle = isVisited ? 'white' : '#0c447c';
+    ctx.font = 'bold 18px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(label, x, y);
+  });
+  
+  // Update explanation
+  document.getElementById('bfs-explanation').innerHTML = 
+    '<strong>BFS Step ' + (step + 1) + '</strong>' +
+    '<div class="step">' + data.desc + '</div>';
+  
+  document.getElementById('bfs-output').innerHTML = 
+    'Queue: [' + data.queue.join(', ') + ']<br>' +
+    'Output: ' + data.output;
+}
+
+// Initialize all visualizations
+window.onload = function() {
+  drawBSTStructure();
+  showInsertStep(0);
+  showTraversal('inorder');
+  showDeleteCase(0);
+  showGraphType(0);
+  showDFSStep(0);
+  showBFSStep(0);
+};
+</script>
+
+</body>
+</html>

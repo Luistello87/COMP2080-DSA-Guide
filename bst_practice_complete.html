@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>COMP 2080 - Interactive BST Practice & Construction</title>
+<style>
+* { box-sizing: border-box; }
+body { 
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+  max-width: 1400px; 
+  margin: 0 auto; 
+  padding: 40px 20px; 
+  background: #fafaf9;
+  line-height: 1.6;
+}
+.header { 
+  background: linear-gradient(135deg, #378ADD 0%, #1D9E75 100%); 
+  color: white; 
+  padding: 40px; 
+  border-radius: 16px; 
+  margin-bottom: 32px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.header h1 { margin: 0 0 8px 0; font-size: 32px; }
+.header .subtitle { opacity: 0.95; font-size: 16px; margin: 0; }
+.nav { 
+  background: white; 
+  padding: 20px; 
+  border-radius: 12px; 
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 20px;
+  z-index: 100;
+}
+.nav h3 { margin: 0 0 12px 0; color: #2d2d2a; font-size: 18px; }
+.nav-links { display: flex; gap: 12px; flex-wrap: wrap; }
+.nav-link { 
+  padding: 8px 16px; 
+  background: #e8e7e1; 
+  border-radius: 6px; 
+  text-decoration: none; 
+  color: #3d3d3a;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.nav-link:hover { background: #378ADD; color: white; transform: translateY(-1px); }
+.section { 
+  background: white; 
+  border-radius: 12px; 
+  padding: 32px; 
+  margin-bottom: 32px; 
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  scroll-margin-top: 100px;
+}
+h2 { 
+  color: #2d2d2a; 
+  margin-top: 0; 
+  font-size: 28px;
+  border-bottom: 2px solid #e8e7e1;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+}
+h3 { color: #3d3d3a; font-size: 20px; margin-top: 24px; }
+.subtitle-text { color: #73726c; font-size: 15px; margin-bottom: 24px; }
+.btn-group { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+button, .btn { 
+  padding: 10px 20px; 
+  border: none; 
+  border-radius: 8px; 
+  background: #e8e7e1; 
+  cursor: pointer; 
+  font-size: 14px; 
+  font-weight: 500; 
+  transition: all 0.2s;
+  color: #3d3d3a;
+}
+button:hover, .btn:hover { background: #d3d2cc; transform: translateY(-1px); }
+button.active, .btn.active { background: #378ADD; color: white; }
+button:disabled { opacity: 0.4; cursor: not-allowed; }
+button.success { background: #639922; color: white; }
+button.error { background: #E24B4A; color: white; }
+canvas { 
+  border: 1px solid #d3d1c7; 
+  border-radius: 8px; 
+  background: white; 
+  display: block; 
+  margin: 20px auto;
+  max-width: 100%;
+}
+.construction-arena {
+  background: #f5f4f0;
+  padding: 24px;
+  border-radius: 12px;
+  margin: 20px 0;
+  border: 2px solid #d3d1c7;
+}
+.traversal-display {
+  background: white;
+  padding: 16px;
+  border-radius: 8px;
+  margin: 16px 0;
+  border: 1px solid #d3d1c7;
+}
+.traversal-display h4 {
+  margin: 0 0 12px 0;
+  color: #3d3d3a;
+  font-size: 15px;
+}
+.traversal-sequence {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.traversal-node {
+  padding: 8px 16px;
+  background: #e8e7e1;
+  border-radius: 6px;
+  font-family: 'Courier New', monospace;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 2px solid transparent;
+}
+.traversal-node:hover {
+  background: #d3d2cc;
+  transform: translateY(-1px);
+}
+.traversal-node.used {
+  background: #c2c0b6;
+  color: #73726c;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+.traversal-node.current {
+  background: #F9CB42;
+  border-color: #BA7517;
+  animation: pulse 1s infinite;
+}
+.traversal-node.selected {
+  background: #1D9E75;
+  color: white;
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+.progress-bar {
+  background: #e8e7e1;
+  height: 8px;
+  border-radius: 4px;
+  margin: 16px 0;
+  overflow: hidden;
+}
+.progress-fill {
+  background: linear-gradient(90deg, #378ADD, #1D9E75);
+  height: 100%;
+  transition: width 0.3s ease;
+}
+.step-indicator {
+  background: #e6f1fb;
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin: 12px 0;
+  color: #0c447c;
+  font-size: 14px;
+  border-left: 3px solid #378ADD;
+}
+.key-point { 
+  background: #f0f9e9; 
+  border-left: 4px solid #639922; 
+  padding: 16px; 
+  margin: 16px 0;
+  border-radius: 4px;
+}
+.key-point strong { color: #3b6d11; }
+.warning { 
+  background: #fef3e6; 
+  border-left: 4px solid #BA7517; 
+  padding: 16px; 
+  margin: 16px 0;
+  border-radius: 4px;
+}
+.hint {
+  background: #fef3e6;
+  padding: 12px;
+  border-radius: 6px;
+  margin: 12px 0;
+  border-left: 3px solid #BA7517;
+  display: none;
+}
+.hint.show { display: block; }
+.feedback {
+  padding: 12px;
+  border-radius: 6px;
+  margin-top: 12px;
+  display: none;
+}
+.feedback.success {
+  background: #f0f9e9;
+  color: #3b6d11;
+  border-left: 3px solid #639922;
+  display: block;
+}
+.feedback.error {
+  background: #fcebeb;
+  color: #791f1f;
+  border-left: 3px solid #e24b4a;
+  display: block;
+}
+.code-example {
+  background: #2d2d2a;
+  color: #c2c0b6;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+  overflow-x: auto;
+}
+.code-example pre {
+  margin: 0;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.keyword { color: #F9CB42; }
+.class-name { color: #85B7EB; }
+.comment { color: #888780; }
+.string { color: #97C459; }
+.stats-panel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin: 16px 0;
+}
+.stat-card {
+  background: white;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #d3d1c7;
+  text-align: center;
+}
+.stat-value {
+  font-size: 24px;
+  font-weight: 500;
+  color: #378ADD;
+  margin: 4px 0;
+}
+.stat-label {
+  font-size: 12px;
+  color: #73726c;
+  text-transform: uppercase;
+}
+@media (max-width: 768px) {
+  .nav { position: relative; top: 0; }
+  body { padding: 20px 10px; }
+  .section { padding: 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+<h1>COMP 2080 - Interactive BST Builder</h1>
+<p class="subtitle">Build trees step-by-step from traversal sequences and watch them grow!</p>
+</div>
+
+<nav class="nav">
+<h3>Quick Navigation</h3>
+<div class="nav-links">
+<a href="#builder-preorder" class="nav-link">Builder: Preorder + Inorder</a>
+<a href="#builder-postorder" class="nav-link">Builder: Postorder + Inorder</a>
+<a href="#practice-mode" class="nav-link">Practice Mode</a>
+<a href="#code-examples" class="nav-link">Java Examples</a>
+</div>
+</nav>
+
+<!-- TREE BUILDER: PREORDER + INORDER -->
+<section id="builder-preorder" class="section">
+<h2>Interactive Tree Builder: From Preorder + Inorder</h2>
+<p class="subtitle-text">Click nodes in the correct order to build the tree step-by-step</p>
+
+<div class="construction-arena">
+<h3 style="margin-top: 0;">Challenge 1: Build the Tree</h3>
+
+<div class="traversal-display">
+<h4>Preorder (Root → Left → Right):</h4>
+<div class="traversal-sequence" id="preorder-seq1">
+<!-- Populated by JavaScript -->
+</div>
+</div>
+
+<div class="traversal-display">
+<h4>Inorder (Left → Root → Right):</h4>
+<div class="traversal-sequence" id="inorder-seq1">
+<!-- Populated by JavaScript -->
+</div>
+</div>
+
+<div class="stats-panel">
+<div class="stat-card">
+<div class="stat-value" id="nodes-placed1">0</div>
+<div class="stat-label">Nodes Placed</div>
+</div>
+<div class="stat-card">
+<div class="stat-value" id="nodes-remaining1">7</div>
+<div class="stat-label">Remaining</div>
+</div>
+<div class="stat-card">
+<div class="stat-value" id="current-step1">1</div>
+<div class="stat-label">Current Step</div>
+</div>
+</div>
+
+<div class="progress-bar">
+<div class="progress-fill" id="progress1" style="width: 0%"></div>
+</div>
+
+<div class="step-indicator" id="instruction1">
+Click the ROOT node (first element in preorder)
+</div>
+
+<canvas id="builder-canvas1" width="700" height="400"></canvas>
+
+<div class="btn-group">
+<button onclick="resetBuilder1()">Reset</button>
+<button onclick="showHint1()">Show Hint</button>
+<button onclick="showNextStep1()">Next Step</button>
+<button onclick="autoComplete1()">Auto-Complete</button>
+</div>
+
+<div id="hint1" class="hint">
+<strong>Hint:</strong> The first element in preorder is always the root. Find it in inorder to split left and right subtrees.
+</div>
+
+<div id="feedback1" class="feedback"></div>
+</div>
+
+<div class="key-point">
+<strong>Construction Algorithm (Preorder + Inorder):</strong>
+<ol style="margin: 8px 0;">
+<li><strong>Root:</strong> First element in preorder is the root</li>
+<li><strong>Find in Inorder:</strong> Locate root in inorder sequence</li>
+<li><strong>Split:</strong> Elements left of root in inorder = left subtree, right = right subtree</li>
+<li><strong>Recurse:</strong> Apply same logic to left and right subtrees</li>
+<li><strong>Order:</strong> Process preorder left-to-right</li>
+</ol>
+</div>
+</section>
+
+<!-- TREE BUILDER: POSTORDER + INORDER -->
+<section id="builder-postorder" class="section">
+<h2>Interactive Tree Builder: From Postorder + Inorder</h2>
+<p class="subtitle-text">Build a tree from postorder and inorder traversals</p>
+
+<div class="construction-arena">
+<h3 style="margin-top: 0;">Challenge 2: Build from Postorder</h3>
+
+<div class="traversal-display">
+<h4>Postorder (Left → Right → Root):</h4>
+<div class="traversal-sequence" id="postorder-seq2">
+<!-- Populated by JavaScript -->
+</div>
+</div>
+
+<div class="traversal-display">
+<h4>Inorder (Left → Root → Right):</h4>
+<div class="traversal-sequence" id="inorder-seq2">
+<!-- Populated by JavaScript -->
+</div>
+</div>
+
+<div class="stats-panel">
+<div class="stat-card">
+<div class="stat-value" id="nodes-placed2">0</div>
+<div class="stat-label">Nodes Placed</div>
+</div>
+<div class="stat-card">
+<div class="stat-value" id="nodes-remaining2">7</div>
+<div class="stat-label">Remaining</div>
+</div>
+<div class="stat-card">
+<div class="stat-value" id="current-step2">1</div>
+<div class="stat-label">Current Step</div>
+</div>
+</div>
+
+<div class="progress-bar">
+<div class="progress-fill" id="progress2" style="width: 0%"></div>
+</div>
+
+<div class="step-indicator" id="instruction2">
+Click the ROOT node (last element in postorder)
+</div>
+
+<canvas id="builder-canvas2" width="700" height="400"></canvas>
+
+<div class="btn-group">
+<button onclick="resetBuilder2()">Reset</button>
+<button onclick="showHint2()">Show Hint</button>
+<button onclick="showNextStep2()">Next Step</button>
+<button onclick="autoComplete2()">Auto-Complete</button>
+</div>
+
+<div id="hint2" class="hint">
+<strong>Hint:</strong> The last element in postorder is always the root. Process postorder from right to left.
+</div>
+
+<div id="feedback2" class="feedback"></div>
+</div>
+
+<div class="warning">
+<strong>Key Difference:</strong> With postorder, the root is the <strong>LAST</strong> element (not first like preorder). Process postorder from right to left: Root → Right subtree → Left subtree.
+</div>
+</section>
+
+<!-- PRACTICE MODE -->
+<section id="practice-mode" class="section">
+<h2>Practice Mode: Random Trees</h2>
+<p class="subtitle-text">Generate random trees and practice building them</p>
+
+<div class="construction-arena">
+<h3 style="margin-top: 0;">Random Challenge</h3>
+
+<div class="btn-group">
+<button onclick="generateEasy()">Easy (5 nodes)</button>
+<button onclick="generateMedium()">Medium (7 nodes)</button>
+<button onclick="generateHard()">Hard (9 nodes)</button>
+<button onclick="toggleAnswers()">Show Answers</button>
+</div>
+
+<div class="traversal-display">
+<h4>Preorder:</h4>
+<div class="traversal-sequence" id="practice-preorder"></div>
+</div>
+
+<div class="traversal-display">
+<h4>Inorder:</h4>
+<div class="traversal-sequence" id="practice-inorder"></div>
+</div>
+
+<div class="traversal-display">
+<h4>Postorder:</h4>
+<div class="traversal-sequence" id="practice-postorder"></div>
+</div>
+
+<canvas id="practice-canvas" width="700" height="400"></canvas>
+
+<div id="practice-answers" class="hint">
+<strong>Tree Structure:</strong>
+<div id="answer-text"></div>
+</div>
+</div>
+</section>
+
+<!-- CODE EXAMPLES -->
+<section id="code-examples" class="section">
+<h2>Java Code Examples</h2>
+<p class="subtitle-text">Complete implementation of tree construction algorithms</p>
+
+<h3>Building Tree from Preorder + Inorder</h3>
+<div class="code-example">
+<pre><span class="comment">// Build BST from Preorder and Inorder traversals</span>
+<span class="keyword">class</span> <span class="class-name">TreeBuilder</span> {
+    <span class="keyword">int</span> preIndex = 0;  <span class="comment">// Current position in preorder array</span>
+    
+    <span class="keyword">public</span> <span class="class-name">Node</span> buildFromPreIn(<span class="keyword">int</span>[] preorder, <span class="keyword">int</span>[] inorder) {
+        preIndex = 0;
+        <span class="keyword">return</span> buildPreIn(preorder, inorder, 0, inorder.length - 1);
+    }
+    
+    <span class="keyword">private</span> <span class="class-name">Node</span> buildPreIn(<span class="keyword">int</span>[] pre, <span class="keyword">int</span>[] in, <span class="keyword">int</span> inStart, <span class="keyword">int</span> inEnd) {
+        <span class="comment">// Base case: no more elements in this subtree</span>
+        <span class="keyword">if</span> (inStart > inEnd) {
+            <span class="keyword">return null</span>;
+        }
+        
+        <span class="comment">// Step 1: Next element in preorder is the root</span>
+        <span class="keyword">int</span> rootValue = pre[preIndex++];
+        <span class="class-name">Node</span> root = <span class="keyword">new</span> <span class="class-name">Node</span>(rootValue);
+        
+        <span class="comment">// Step 2: Find root position in inorder</span>
+        <span class="keyword">int</span> rootIndex = findIndex(in, inStart, inEnd, rootValue);
+        
+        <span class="comment">// Step 3: Build left subtree (elements before root in inorder)</span>
+        root.left = buildPreIn(pre, in, inStart, rootIndex - 1);
+        
+        <span class="comment">// Step 4: Build right subtree (elements after root in inorder)</span>
+        root.right = buildPreIn(pre, in, rootIndex + 1, inEnd);
+        
+        <span class="keyword">return</span> root;
+    }
+    
+    <span class="comment">// Helper: Find value's index in array</span>
+    <span class="keyword">private int</span> findIndex(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> start, <span class="keyword">int</span> end, <span class="keyword">int</span> value) {
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = start; i &lt;= end; i++) {
+            <span class="keyword">if</span> (arr[i] == value) <span class="keyword">return</span> i;
+        }
+        <span class="keyword">return</span> -1;
+    }
+}
+
+<span class="comment">// Example usage:</span>
+<span class="keyword">int</span>[] preorder = {20, 10, 4, 8, 12, 14, 22};
+<span class="keyword">int</span>[] inorder = {4, 8, 10, 12, 14, 20, 22};
+
+<span class="class-name">TreeBuilder</span> builder = <span class="keyword">new</span> <span class="class-name">TreeBuilder</span>();
+<span class="class-name">Node</span> root = builder.buildFromPreIn(preorder, inorder);</pre>
+</div>
+
+<h3>Building Tree from Postorder + Inorder</h3>
+<div class="code-example">
+<pre><span class="comment">// Build BST from Postorder and Inorder traversals</span>
+<span class="keyword">class</span> <span class="class-name">TreeBuilder</span> {
+    <span class="keyword">int</span> postIndex;  <span class="comment">// Current position in postorder (starts from END)</span>
+    
+    <span class="keyword">public</span> <span class="class-name">Node</span> buildFromPostIn(<span class="keyword">int</span>[] postorder, <span class="keyword">int</span>[] inorder) {
+        postIndex = postorder.length - 1;  <span class="comment">// Start from LAST element</span>
+        <span class="keyword">return</span> buildPostIn(postorder, inorder, 0, inorder.length - 1);
+    }
+    
+    <span class="keyword">private</span> <span class="class-name">Node</span> buildPostIn(<span class="keyword">int</span>[] post, <span class="keyword">int</span>[] in, <span class="keyword">int</span> inStart, <span class="keyword">int</span> inEnd) {
+        <span class="keyword">if</span> (inStart > inEnd) {
+            <span class="keyword">return null</span>;
+        }
+        
+        <span class="comment">// Step 1: LAST unprocessed element in postorder is root</span>
+        <span class="keyword">int</span> rootValue = post[postIndex--];  <span class="comment">// Decrement (going backwards)</span>
+        <span class="class-name">Node</span> root = <span class="keyword">new</span> <span class="class-name">Node</span>(rootValue);
+        
+        <span class="comment">// Step 2: Find root in inorder</span>
+        <span class="keyword">int</span> rootIndex = findIndex(in, inStart, inEnd, rootValue);
+        
+        <span class="comment">// Step 3: Build RIGHT subtree FIRST (postorder processes right before left)</span>
+        root.right = buildPostIn(post, in, rootIndex + 1, inEnd);
+        
+        <span class="comment">// Step 4: Build LEFT subtree</span>
+        root.left = buildPostIn(post, in, inStart, rootIndex - 1);
+        
+        <span class="keyword">return</span> root;
+    }
+    
+    <span class="keyword">private int</span> findIndex(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> start, <span class="keyword">int</span> end, <span class="keyword">int</span> value) {
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = start; i &lt;= end; i++) {
+            <span class="keyword">if</span> (arr[i] == value) <span class="keyword">return</span> i;
+        }
+        <span class="keyword">return</span> -1;
+    }
+}
+
+<span class="comment">// Example usage:</span>
+<span class="keyword">int</span>[] postorder = {5, 15, 10, 25, 35, 30, 20};
+<span class="keyword">int</span>[] inorder = {5, 10, 15, 20, 25, 30, 35};
+
+<span class="class-name">TreeBuilder</span> builder = <span class="keyword">new</span> <span class="class-name">TreeBuilder</span>();
+<span class="class-name">Node</span> root = builder.buildFromPostIn(postorder, inorder);</pre>
+</div>
+
+<div class="key-point">
+<strong>Important Differences:</strong>
+<ul style="margin: 8px 0;">
+<li><strong>Preorder:</strong> Process left-to-right, root is FIRST, build left subtree then right</li>
+<li><strong>Postorder:</strong> Process right-to-left, root is LAST, build right subtree FIRST then left</li>
+<li><strong>Both:</strong> Use inorder to split left and right subtrees</li>
+</ul>
+</div>
+</section>
+
+<script>
+// ===== BUILDER 1: PREORDER + INORDER =====
+const challenge1 = {
+  preorder: [20, 10, 4, 8, 12, 14, 22],
+  inorder: [4, 8, 10, 12, 14, 20, 22],
+  tree: null,
+  currentStep: 0,
+  placedNodes: [],
+  expectedSequence: [20, 10, 4, 8, 12, 14, 22]
+};
+
+class TreeNode {
+  constructor(val) {
+    this.val = val;
+    this.left = null;
+    this.right = null;
+  }
+}
+
+function initBuilder1() {
+  // Create traversal displays
+  const preorderDiv = document.getElementById('preorder-seq1');
+  const inorderDiv = document.getElementById('inorder-seq1');
+  
+  preorderDiv.innerHTML = challenge1.preorder.map((val, idx) => 
+    `<div class="traversal-node" onclick="selectNode1(${val}, ${idx}, 'pre')">${val}</div>`
+  ).join('');
+  
+  inorderDiv.innerHTML = challenge1.inorder.map((val, idx) => 
+    `<div class="traversal-node" onclick="selectNode1(${val}, ${idx}, 'in')">${val}</div>`
+  ).join('');
+  
+  updateBuilder1Display();
+}
+
+function selectNode1(value, index, type) {
+  const expectedValue = challenge1.expectedSequence[challenge1.currentStep];
+  
+  if (value !== expectedValue) {
+    showFeedback1('error', `✗ Incorrect! Expected ${expectedValue}. Remember: first element in preorder is the root.`);
+    return;
+  }
+  
+  // Add node to tree
+  if (challenge1.tree === null) {
+    challenge1.tree = new TreeNode(value);
+  } else {
+    addNodeToTree1(challenge1.tree, value, challenge1.inorder);
+  }
+  
+  challenge1.placedNodes.push(value);
+  challenge1.currentStep++;
+  
+  // Mark as used
+  markNodeUsed1(value);
+  
+  updateBuilder1Display();
+  
+  if (challenge1.currentStep >= challenge1.expectedSequence.length) {
+    showFeedback1('success', '🎉 Perfect! You successfully built the entire tree!');
+    document.getElementById('instruction1').textContent = 'Tree construction complete!';
+  } else {
+    const nextVal = challenge1.expectedSequence[challenge1.currentStep];
+    document.getElementById('instruction1').textContent = 
+      `Next: Click node ${nextVal} (step ${challenge1.currentStep + 1} of ${challenge1.expectedSequence.length})`;
+  }
+}
+
+function addNodeToTree1(root, value, inorder) {
+  // Find position in inorder
+  const rootIdx = inorder.indexOf(root.val);
+  const valueIdx = inorder.indexOf(value);
+  
+  if (valueIdx < rootIdx) {
+    // Goes in left subtree
+    if (root.left === null) {
+      root.left = new TreeNode(value);
+    } else {
+      addNodeToTree1(root.left, value, inorder);
+    }
+  } else {
+    // Goes in right subtree
+    if (root.right === null) {
+      root.right = new TreeNode(value);
+    } else {
+      addNodeToTree1(root.right, value, inorder);
+    }
+  }
+}
+
+function markNodeUsed1(value) {
+  document.querySelectorAll('#preorder-seq1 .traversal-node, #inorder-seq1 .traversal-node').forEach(node => {
+    if (parseInt(node.textContent) === value) {
+      node.classList.add('used');
+      node.onclick = null;
+    }
+  });
+}
+
+function updateBuilder1Display() {
+  // Update stats
+  document.getElementById('nodes-placed1').textContent = challenge1.placedNodes.length;
+  document.getElementById('nodes-remaining1').textContent = 
+    challenge1.expectedSequence.length - challenge1.placedNodes.length;
+  document.getElementById('current-step1').textContent = challenge1.currentStep + 1;
+  
+  // Update progress
+  const progress = (challenge1.placedNodes.length / challenge1.expectedSequence.length) * 100;
+  document.getElementById('progress1').style.width = progress + '%';
+  
+  // Draw tree
+  drawTree1();
+}
+
+function drawTree1() {
+  const canvas = document.getElementById('builder-canvas1');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  if (challenge1.tree === null) {
+    ctx.fillStyle = '#888780';
+    ctx.font = '16px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Click the root node to start building...', 350, 200);
+    return;
+  }
+  
+  const positions = {};
+  calculatePositions1(challenge1.tree, 350, 50, 120, positions);
+  
+  // Draw edges
+  ctx.strokeStyle = '#b4b2a9';
+  ctx.lineWidth = 2.5;
+  drawEdges1(ctx, challenge1.tree, positions);
+  
+  // Draw nodes with animation
+  drawNodes1(ctx, challenge1.tree, positions);
+}
+
+function calculatePositions1(node, x, y, offset, positions) {
+  if (node === null) return;
+  
+  positions[node.val] = {x, y};
+  
+  if (node.left) {
+    calculatePositions1(node.left, x - offset, y + 80, offset * 0.6, positions);
+  }
+  if (node.right) {
+    calculatePositions1(node.right, x + offset, y + 80, offset * 0.6, positions);
+  }
+}
+
+function drawEdges1(ctx, node, positions) {
+  if (node === null) return;
+  
+  const pos = positions[node.val];
+  
+  if (node.left) {
+    const leftPos = positions[node.left.val];
+    ctx.beginPath();
+    ctx.moveTo(pos.x, pos.y);
+    ctx.lineTo(leftPos.x, leftPos.y);
+    ctx.stroke();
+    drawEdges1(ctx, node.left, positions);
+  }
+  
+  if (node.right) {
+    const rightPos = positions[node.right.val];
+    ctx.beginPath();
+    ctx.moveTo(pos.x, pos.y);
+    ctx.lineTo(rightPos.x, rightPos.y);
+    ctx.stroke();
+    drawEdges1(ctx, node.right, positions);
+  }
+}
+
+function drawNodes1(ctx, node, positions) {
+  if (node === null) return;
+  
+  const pos = positions[node.val];
+  const nodeIndex = challenge1.placedNodes.indexOf(node.val);
+  const isRecent = nodeIndex === challenge1.placedNodes.length - 1;
+  
+  ctx.fillStyle = isRecent ? '#1D9E75' : '#85B7EB';
+  ctx.strokeStyle = '#3d3d3a';
+  ctx.lineWidth = isRecent ? 3 : 1.5;
+  ctx.beginPath();
+  ctx.arc(pos.x, pos.y, 28, 0, 2*Math.PI);
+  ctx.fill();
+  ctx.stroke();
+  
+  ctx.fillStyle = isRecent ? 'white' : '#0c447c';
+  ctx.font = 'bold 18px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(node.val, pos.x, pos.y);
+  
+  // Draw step number
+  if (nodeIndex >= 0) {
+    ctx.fillStyle = isRecent ? 'white' : '#5f5e5a';
+    ctx.font = '11px sans-serif';
+    ctx.fillText(nodeIndex + 1, pos.x, pos.y - 40);
+  }
+  
+  if (node.left) drawNodes1(ctx, node.left, positions);
+  if (node.right) drawNodes1(ctx, node.right, positions);
+}
+
+function showFeedback1(type, message) {
+  const feedback = document.getElementById('feedback1');
+  feedback.className = 'feedback ' + type;
+  feedback.textContent = message;
+  
+  if (type === 'error') {
+    setTimeout(() => {
+      feedback.className = 'feedback';
+    }, 3000);
+  }
+}
+
+function resetBuilder1() {
+  challenge1.tree = null;
+  challenge1.currentStep = 0;
+  challenge1.placedNodes = [];
+  initBuilder1();
+  document.getElementById('feedback1').className = 'feedback';
+  document.getElementById('hint1').classList.remove('show');
+  document.getElementById('instruction1').textContent = 
+    'Click the ROOT node (first element in preorder)';
+}
+
+function showHint1() {
+  document.getElementById('hint1').classList.toggle('show');
+}
+
+function showNextStep1() {
+  const nextVal = challenge1.expectedSequence[challenge1.currentStep];
+  showFeedback1('success', `💡 Next node to add: ${nextVal}`);
+}
+
+function autoComplete1() {
+  while (challenge1.currentStep < challenge1.expectedSequence.length) {
+    const val = challenge1.expectedSequence[challenge1.currentStep];
+    selectNode1(val, 0, 'pre');
+  }
+}
+
+// ===== BUILDER 2: POSTORDER + INORDER =====
+const challenge2 = {
+  postorder: [5, 15, 10, 25, 35, 30, 20],
+  inorder: [5, 10, 15, 20, 25, 30, 35],
+  tree: null,
+  currentStep: 0,
+  placedNodes: [],
+  expectedSequence: [20, 10, 5, 15, 30, 25, 35] // Root first, then process recursively
+};
+
+function initBuilder2() {
+  const postorderDiv = document.getElementById('postorder-seq2');
+  const inorderDiv = document.getElementById('inorder-seq2');
+  
+  postorderDiv.innerHTML = challenge2.postorder.map((val, idx) => 
+    `<div class="traversal-node" onclick="selectNode2(${val}, ${idx})">${val}</div>`
+  ).join('');
+  
+  inorderDiv.innerHTML = challenge2.inorder.map((val, idx) => 
+    `<div class="traversal-node" onclick="selectNode2(${val}, ${idx})">${val}</div>`
+  ).join('');
+  
+  updateBuilder2Display();
+}
+
+function selectNode2(value, index) {
+  const expectedValue = challenge2.expectedSequence[challenge2.currentStep];
+  
+  if (value !== expectedValue) {
+    showFeedback2('error', `✗ Incorrect! Expected ${expectedValue}. Remember: last element in postorder is the root.`);
+    return;
+  }
+  
+  if (challenge2.tree === null) {
+    challenge2.tree = new TreeNode(value);
+  } else {
+    addNodeToTree1(challenge2.tree, value, challenge2.inorder);
+  }
+  
+  challenge2.placedNodes.push(value);
+  challenge2.currentStep++;
+  
+  markNodeUsed2(value);
+  updateBuilder2Display();
+  
+  if (challenge2.currentStep >= challenge2.expectedSequence.length) {
+    showFeedback2('success', '🎉 Excellent! You built the tree from postorder + inorder!');
+    document.getElementById('instruction2').textContent = 'Tree construction complete!';
+  } else {
+    const nextVal = challenge2.expectedSequence[challenge2.currentStep];
+    document.getElementById('instruction2').textContent = 
+      `Next: Click node ${nextVal} (step ${challenge2.currentStep + 1} of ${challenge2.expectedSequence.length})`;
+  }
+}
+
+function markNodeUsed2(value) {
+  document.querySelectorAll('#postorder-seq2 .traversal-node, #inorder-seq2 .traversal-node').forEach(node => {
+    if (parseInt(node.textContent) === value) {
+      node.classList.add('used');
+      node.onclick = null;
+    }
+  });
+}
+
+function updateBuilder2Display() {
+  document.getElementById('nodes-placed2').textContent = challenge2.placedNodes.length;
+  document.getElementById('nodes-remaining2').textContent = 
+    challenge2.expectedSequence.length - challenge2.placedNodes.length;
+  document.getElementById('current-step2').textContent = challenge2.currentStep + 1;
+  
+  const progress = (challenge2.placedNodes.length / challenge2.expectedSequence.length) * 100;
+  document.getElementById('progress2').style.width = progress + '%';
+  
+  drawTree2();
+}
+
+function drawTree2() {
+  const canvas = document.getElementById('builder-canvas2');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  if (challenge2.tree === null) {
+    ctx.fillStyle = '#888780';
+    ctx.font = '16px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Click the root node to start building...', 350, 200);
+    return;
+  }
+  
+  const positions = {};
+  calculatePositions1(challenge2.tree, 350, 50, 120, positions);
+  
+  ctx.strokeStyle = '#b4b2a9';
+  ctx.lineWidth = 2.5;
+  drawEdges1(ctx, challenge2.tree, positions);
+  
+  // Draw nodes
+  drawNodesWithOrder(ctx, challenge2.tree, positions, challenge2.placedNodes);
+}
+
+function drawNodesWithOrder(ctx, node, positions, placedNodes) {
+  if (node === null) return;
+  
+  const pos = positions[node.val];
+  const nodeIndex = placedNodes.indexOf(node.val);
+  const isRecent = nodeIndex === placedNodes.length - 1;
+  
+  ctx.fillStyle = isRecent ? '#1D9E75' : '#85B7EB';
+  ctx.strokeStyle = '#3d3d3a';
+  ctx.lineWidth = isRecent ? 3 : 1.5;
+  ctx.beginPath();
+  ctx.arc(pos.x, pos.y, 28, 0, 2*Math.PI);
+  ctx.fill();
+  ctx.stroke();
+  
+  ctx.fillStyle = isRecent ? 'white' : '#0c447c';
+  ctx.font = 'bold 18px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(node.val, pos.x, pos.y);
+  
+  if (nodeIndex >= 0) {
+    ctx.fillStyle = isRecent ? 'white' : '#5f5e5a';
+    ctx.font = '11px sans-serif';
+    ctx.fillText(nodeIndex + 1, pos.x, pos.y - 40);
+  }
+  
+  if (node.left) drawNodesWithOrder(ctx, node.left, positions, placedNodes);
+  if (node.right) drawNodesWithOrder(ctx, node.right, positions, placedNodes);
+}
+
+function showFeedback2(type, message) {
+  const feedback = document.getElementById('feedback2');
+  feedback.className = 'feedback ' + type;
+  feedback.textContent = message;
+  
+  if (type === 'error') {
+    setTimeout(() => feedback.className = 'feedback', 3000);
+  }
+}
+
+function resetBuilder2() {
+  challenge2.tree = null;
+  challenge2.currentStep = 0;
+  challenge2.placedNodes = [];
+  initBuilder2();
+  document.getElementById('feedback2').className = 'feedback';
+  document.getElementById('hint2').classList.remove('show');
+  document.getElementById('instruction2').textContent = 
+    'Click the ROOT node (last element in postorder)';
+}
+
+function showHint2() {
+  document.getElementById('hint2').classList.toggle('show');
+}
+
+function showNextStep2() {
+  const nextVal = challenge2.expectedSequence[challenge2.currentStep];
+  showFeedback2('success', `💡 Next node to add: ${nextVal}`);
+}
+
+function autoComplete2() {
+  while (challenge2.currentStep < challenge2.expectedSequence.length) {
+    const val = challenge2.expectedSequence[challenge2.currentStep];
+    selectNode2(val, 0);
+  }
+}
+
+// ===== PRACTICE MODE =====
+let practiceTree = null;
+
+function generateTree(size) {
+  const values = [];
+  const used = new Set();
+  
+  while (values.length < size) {
+    const val = Math.floor(Math.random() * 90) + 10;
+    if (!used.has(val)) {
+      values.push(val);
+      used.add(val);
+    }
+  }
+  
+  // Build tree
+  practiceTree = new TreeNode(values[0]);
+  for (let i = 1; i < values.length; i++) {
+    insertIntoPractice(practiceTree, values[i]);
+  }
+  
+  // Get traversals
+  const preorder = [];
+  const inorder = [];
+  const postorder = [];
+  
+  getPreorder(practiceTree, preorder);
+  getInorder(practiceTree, inorder);
+  getPostorder(practiceTree, postorder);
+  
+  // Display
+  displayPracticeTraversal('practice-preorder', preorder);
+  displayPracticeTraversal('practice-inorder', inorder);
+  displayPracticeTraversal('practice-postorder', postorder);
+  
+  drawPracticeTree();
+  document.getElementById('practice-answers').classList.remove('show');
+}
+
+function insertIntoPractice(node, val) {
+  if (val < node.val) {
+    if (node.left === null) node.left = new TreeNode(val);
+    else insertIntoPractice(node.left, val);
+  } else {
+    if (node.right === null) node.right = new TreeNode(val);
+    else insertIntoPractice(node.right, val);
+  }
+}
+
+function getPreorder(node, arr) {
+  if (node === null) return;
+  arr.push(node.val);
+  getPreorder(node.left, arr);
+  getPreorder(node.right, arr);
+}
+
+function getInorder(node, arr) {
+  if (node === null) return;
+  getInorder(node.left, arr);
+  arr.push(node.val);
+  getInorder(node.right, arr);
+}
+
+function getPostorder(node, arr) {
+  if (node === null) return;
+  getPostorder(node.left, arr);
+  getPostorder(node.right, arr);
+  arr.push(node.val);
+}
+
+function displayPracticeTraversal(id, arr) {
+  document.getElementById(id).innerHTML = arr.map(v => 
+    `<div class="traversal-node">${v}</div>`
+  ).join('');
+}
+
+function drawPracticeTree() {
+  const canvas = document.getElementById('practice-canvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  if (practiceTree === null) {
+    ctx.fillStyle = '#888780';
+    ctx.font = '16px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Generate a random tree to practice!', 350, 200);
+    return;
+  }
+  
+  const positions = {};
+  calculatePositions1(practiceTree, 350, 50, 120, positions);
+  
+  ctx.strokeStyle = '#b4b2a9';
+  ctx.lineWidth = 2.5;
+  drawEdges1(ctx, practiceTree, positions);
+  drawNodes1(ctx, practiceTree, positions);
+}
+
+function generateEasy() { generateTree(5); }
+function generateMedium() { generateTree(7); }
+function generateHard() { generateTree(9); }
+
+function toggleAnswers() {
+  document.getElementById('practice-answers').classList.toggle('show');
+  
+  if (practiceTree) {
+    const structure = getTreeStructure(practiceTree);
+    document.getElementById('answer-text').innerHTML = 
+      `<pre style="margin: 8px 0; font-family: monospace;">${structure}</pre>`;
+  }
+}
+
+function getTreeStructure(node, prefix = '', isLeft = true) {
+  if (node === null) return '';
+  
+  let result = prefix + (isLeft ? '├── ' : '└── ') + node.val + '\n';
+  
+  if (node.left || node.right) {
+    if (node.left) {
+      result += getTreeStructure(node.left, prefix + (isLeft ? '│   ' : '    '), true);
+    }
+    if (node.right) {
+      result += getTreeStructure(node.right, prefix + (isLeft ? '│   ' : '    '), false);
+    }
+  }
+  
+  return result;
+}
+
+// Initialize on page load
+window.onload = function() {
+  initBuilder1();
+  initBuilder2();
+};
+</script>
+
+</body>
+</html>
