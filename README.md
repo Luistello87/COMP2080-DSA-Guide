@@ -11,6 +11,10 @@
 
 ---
 
+### 👉 [🚀 Try It Live — Click Here to Open the Guide!](https://luistello87.github.io/COMP2080-DSA-Guide/comp2080_master_guide.html) 👈
+
+[![Live Demo](https://img.shields.io/badge/▶_LIVE_DEMO-Click_to_Launch-1D9E75?style=for-the-badge&logoColor=white)](https://luistello87.github.io/COMP2080-DSA-Guide/comp2080_master_guide.html)
+
 *Zero dependencies · No build step · Just open the file and start learning*
 
 </div>
